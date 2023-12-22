@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navInicio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/ic_inicio"
+        android:title="Inicio" />
+    <item
+        android:id="@+id/navGuardados"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/ic_guardados"
+        android:title="Guardados" />
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="" />
+
+    <item
+        android:id="@+id/navNotificaciones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/ic_notificacion"
+        android:title="Notificaciones" />
+    <item
+        android:id="@+id/navHistorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/ic_historial"
+        android:title="Historial" />
+</menu>

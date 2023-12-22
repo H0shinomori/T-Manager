@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="navAdd" type="id" />
+    <item name="barraNav" type="id" />
+    <item name="bottomAppBar" type="id" />
+</resources>

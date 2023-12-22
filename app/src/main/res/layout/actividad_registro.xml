@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_color"
+    android:orientation="vertical"
+    tools:context=".actividad_registro">
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"></View>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Registro"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="36sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nombre_registro"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/borde_pantalla_registro"
+                android:drawablePadding="8dp"
+                android:hint="Nombre"
+                android:padding="8dp"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/grey" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/apellido_registro"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/borde_pantalla_registro"
+                android:drawablePadding="8dp"
+                android:hint="Apellido"
+                android:padding="8dp"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/grey" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email_registro"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/borde_pantalla_registro"
+                android:drawablePadding="8dp"
+                android:hint="Correo electronico"
+                android:padding="8dp"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/grey" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/contra_registro"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/borde_pantalla_registro"
+                android:drawablePadding="8dp"
+                android:hint="Contraseña"
+                android:inputType="textPassword"
+                android:padding="8dp"
+                android:textColorHighlight="@color/cardview_dark_background"
+                android:textColorHint="@color/grey" />
+
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"></View>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/boton_registroCompleto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:alpha="0.8"
+                android:background="@drawable/button_login"
+                android:text="Registrate"
+                app:backgroundTint="@color/secundario" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

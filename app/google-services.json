@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "544585095886",
+    "project_id": "danyk-830a4",
+    "storage_bucket": "danyk-830a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544585095886:android:3cb3d7159ff6c4de498e9f",
+        "android_client_info": {
+          "package_name": "android.danyk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYxTlXunEoJrohk-wlSzmfMQ3ppbVLssM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
