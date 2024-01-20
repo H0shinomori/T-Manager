@@ -2,9 +2,7 @@ package android.danyk;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.danyk.databinding.ActividadMenuBinding;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,12 +14,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class actividad_menu extends AppCompatActivity {
     FirebaseAuth auth;
-    Button boton_cerrar_sesion;
+    FloatingActionButton boton_ticket;
     private BottomNavigationView barraNavegacion;
     private FrameLayout frameLayout;
 
@@ -32,18 +32,15 @@ public class actividad_menu extends AppCompatActivity {
         setContentView(R.layout.actividad_menu);
         frameLayout = findViewById(R.id.frameLayout);
         barraNavegacion = findViewById(R.id.barraVista);
+        boton_ticket =findViewById(R.id.floatingActionButton);
 
         auth = FirebaseAuth.getInstance();
-        boton_cerrar_sesion = findViewById(R.id.cerrar_sesion);
 
-
-        boton_cerrar_sesion.setOnClickListener(new View.OnClickListener() {
+        boton_ticket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), actividad_login.class);
+                Intent intent = new Intent(actividad_menu.this, actividad_ticket.class);
                 startActivity(intent);
-                finishAffinity();
             }
         });
 

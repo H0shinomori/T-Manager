@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,23 +9,17 @@
     tools:context=".actividad_login">
 
     <ImageView
-        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_gravity="center"
+        android:layout_marginTop="50dp"
         android:padding="8dp"
-        android:src="@drawable/logo_definitivo">
-
-    </ImageView>
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"></View>
+        android:src="@drawable/logo_definitivo"></ImageView>
 
     <TextView
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:text="¡Bienvenido a tu gestor de incidencias!"
         android:textAlignment="center"
         android:textColor="@color/white"
@@ -84,15 +77,12 @@
                 android:textColorHighlight="@color/cardview_dark_background"
                 android:textColorHint="@color/grey" />
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="12dp"></View>
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/boton_inicioSesion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="12dp"
                 android:alpha="0.8"
                 android:background="@drawable/button_login"
                 android:text="Iniciar sesión"
@@ -101,34 +91,31 @@
 
             </com.google.android.material.button.MaterialButton>
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="6dp">
-
-            </View>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <TextView
+                <TextView
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="¿No tienes usuario?  "
-                android:textColor="@color/grey"
-                android:textSize="17dp">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¿No tienes usuario?  "
+                    android:textColor="@color/grey"
+                    android:textSize="17dp">
 
-            </TextView>
+                </TextView>
+
                 <TextView
                     android:id="@+id/login_registrate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Registrate"
+                    android:textColor="@color/secundario"
                     android:textSize="17dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/secundario">
+                    android:textStyle="bold">
 
                 </TextView>
 

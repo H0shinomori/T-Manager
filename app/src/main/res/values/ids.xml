@@ -3,4 +3,5 @@
     <item name="navAdd" type="id" />
     <item name="barraNav" type="id" />
     <item name="bottomAppBar" type="id" />
+
 </resources>

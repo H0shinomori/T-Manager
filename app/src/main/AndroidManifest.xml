@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Danyk"
         tools:targetApi="31">
-
+        <activity
+            android:name=".actividad_ticket"
+            android:exported="false" />
         <activity
             android:name=".actividad_login"
             android:exported="true"
@@ -23,7 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".actividad_registro"
             android:exported="true">
@@ -33,7 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name=".actividad_menu"
             android:exported="true">
@@ -43,9 +43,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-
     </application>
 
 </manifest>
