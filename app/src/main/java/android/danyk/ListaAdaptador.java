@@ -47,9 +47,7 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView titulo, estado, prioridad;
-
         ViewHolder(View itemView) {
             super(itemView);
             titulo = itemView.findViewById(R.id.ticket_titulo);

@@ -8,15 +8,17 @@ public class Ticket {
     public String titulo;
     public String estado;
     public String prioridad;
+    public String descripcion;
 
     public Ticket() {
 
     }
 
-    public Ticket(String titulo, String estado, String prioridad) {
+    public Ticket(String titulo, String estado, String prioridad, String descripcion) {
         this.titulo = titulo;
         this.estado = estado;
         this.prioridad = prioridad;
+        this.descripcion = descripcion;
     }
 
     public String getTitulo() {
@@ -41,5 +43,13 @@ public class Ticket {
 
     public void setPrioridad(String prioridad) {
         this.prioridad = prioridad;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }

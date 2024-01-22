@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -54,9 +55,11 @@ public class actividad_ticket extends AppCompatActivity {
     }
 
     private void insertarDatos() {
-        String Titulo, Estado, Prioridad;
+        String Titulo, Estado, Prioridad, Descripcion;
         Titulo = String.valueOf(titulo.getText());
         Estado = estado.getText().toString();
+        Descripcion = String.valueOf(descripcion.getText());
+
 
         int radioButtonId = prioridad.getCheckedRadioButtonId();
 
@@ -64,11 +67,14 @@ public class actividad_ticket extends AppCompatActivity {
             RadioButton radioButton = findViewById(radioButtonId);
             Prioridad = radioButton.getText().toString();
             String id = databaseReference.push().getKey();
-            ticket = new Ticket(Titulo, Estado, Prioridad);
+
+            ticket = new Ticket(Titulo, Estado, Prioridad, Descripcion);
             databaseReference.child("ticket").child(id).setValue(ticket).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
+                        Intent intent  = new Intent(actividad_ticket.this, actividad_menu.class);
+                        startActivity(intent);
                         Toast.makeText(actividad_ticket.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
                     }
                 }

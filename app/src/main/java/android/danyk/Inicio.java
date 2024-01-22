@@ -3,8 +3,10 @@ package android.danyk;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -15,6 +17,11 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,43 +35,51 @@ import java.util.List;
 public class Inicio extends Fragment {
     Button boton_cerrar_sesion;
     FirebaseAuth mAuth;
-    FirebaseFirestore firestore;
     TextView mostrarNombre;
     List<Ticket> elementos;
     RecyclerView recyclerView;
     ListaAdaptador listaAdaptador;
-    CollectionReference databaseReference;
+    DatabaseReference databaseReference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inicio, container, false);
+
         boton_cerrar_sesion = view.findViewById(R.id.cerrar_sesion);
         mostrarNombre = view.findViewById(R.id.nombre_usuario);
         mAuth = FirebaseAuth.getInstance();
-
         recyclerView = view.findViewById(R.id.recycleView);
-        firestore = FirebaseFirestore.getInstance();
-        databaseReference = firestore.collection("ticket");
+        databaseReference = FirebaseDatabase.getInstance().getReference("ticket");
         elementos = new ArrayList<>();
         listaAdaptador = new ListaAdaptador(elementos, this);
         recyclerView.setAdapter(listaAdaptador);
 
-        firestore.collection("ticket").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(error != null){
+        ListaAdaptador listaAdaptador = new ListaAdaptador(elementos, this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(listaAdaptador);
 
-                    return;
-                }
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 elementos.clear();
-                for (QueryDocumentSnapshot document : value) {
-                    Ticket ticket = document.toObject(Ticket.class);
+                for (DataSnapshot dt : snapshot.getChildren()) {
+                    Ticket ticket = dt.getValue(Ticket.class);
                     elementos.add(ticket);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listaAdaptador.notifyDataSetChanged();
+                        }
+                    });
                 }
-                listaAdaptador.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
-
 
         FirebaseUser usuario = mAuth.getCurrentUser();
         if (usuario != null) {
@@ -82,8 +97,8 @@ public class Inicio extends Fragment {
                     startActivity(intent);
                 }
             });
+            return view;
         }
         return view;
     }
 }
-

@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="android.danyk" />
-                  <option name="mobileSdkAppId" value="1:544585095886:android:3cb3d7159ff6c4de498e9f" />
-                  <option name="projectId" value="danyk-830a4" />
-                  <option name="projectNumber" value="544585095886" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
