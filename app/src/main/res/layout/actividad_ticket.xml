@@ -76,25 +76,34 @@
                     android:layout_marginStart="20dp"
                     android:text="Prioridad:" />
 
-                <RadioButton
-                    android:id="@+id/creacion_ticket_baja"
+                <RadioGroup
+                    android:id="@+id/creacion_ticket_prioridad"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Baja" />
+                    android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/creacion_ticket_media"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Media" />
+                    <RadioButton
+                        android:id="@+id/creacion_ticket_baja"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Baja" />
 
-                <RadioButton
-                    android:id="@+id/creacion_ticket_alta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Alta" />
+                    <RadioButton
+                        android:id="@+id/creacion_ticket_media"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Media" />
+
+                    <RadioButton
+                        android:id="@+id/creacion_ticket_alta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Alta" />
+
+                </RadioGroup>
 
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -108,10 +117,11 @@
                     android:text="Estado:" />
 
                 <TextView
+
                     android:id="@+id/creacion_ticket_estado"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" PENDIENTE" />
+                    android:text=" (por defecto) PENDIENTE" />
             </LinearLayout>
 
             <TextView

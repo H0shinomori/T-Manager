@@ -1,5 +1,9 @@
 package android.danyk;
 
+
+import com.google.firebase.database.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class Ticket {
     public String titulo;
     public String estado;

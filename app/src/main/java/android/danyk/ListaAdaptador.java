@@ -1,11 +1,13 @@
 package android.danyk;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -13,11 +15,11 @@ import java.util.List;
 public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHolder> {
     private List<Ticket> datos;
     private LayoutInflater inflater;
-    private Inicio context;
+    private Context context;
 
-    public ListaAdaptador(List<Ticket> itemList, Inicio context) {
+    public ListaAdaptador(List<Ticket> itemList, Fragment context) {
         this.inflater = LayoutInflater.from(context.getContext());
-        this.context = context;
+        this.context = context.getContext();
         this.datos = itemList;
     }
 
@@ -29,7 +31,10 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ListaAdaptador.ViewHolder holder, final int position) {
-        holder.bindData(datos.get(position));
+        Ticket tickets = datos.get(position);
+        holder.titulo.setText(tickets.getTitulo());
+        holder.estado.setText(tickets.getEstado());
+        holder.prioridad.setText(tickets.getPrioridad());
     }
 
     @Override
