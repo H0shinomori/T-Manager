@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import modelo.Ticket;
+
 public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHolder> {
     private List<Ticket> datos;
     private LayoutInflater inflater;

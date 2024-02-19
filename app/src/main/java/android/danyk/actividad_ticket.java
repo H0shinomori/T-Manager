@@ -21,9 +21,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import DAO.TicketDAO;
+import modelo.Ticket;
+
 public class actividad_ticket extends AppCompatActivity {
-    FirebaseAuth mAuth;
-    DatabaseReference databaseReference;
     TextView mostrarNombre, estado;
     TextInputEditText titulo, descripcion;
     RadioGroup prioridad;
@@ -37,61 +38,41 @@ public class actividad_ticket extends AppCompatActivity {
         setContentView(R.layout.actividad_ticket);
 
         mostrarNombre = findViewById(R.id.creacion_ticket_usuario);
-        mAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
         estado = findViewById(R.id.creacion_ticket_estado);
         botonEnvio = findViewById(R.id.creacion_ticket_enviar);
         titulo = findViewById(R.id.creacion_ticket_titulo);
         descripcion = findViewById(R.id.creacion_ticket_descripcion);
         prioridad = findViewById(R.id.creacion_ticket_prioridad);
 
-        mostarNombre();
         botonEnvio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertarDatos();
+
+                TicketDAO ticketDAO = new TicketDAO();
+                String Titulo, Estado, Prioridad, Descripcion;
+                Titulo = String.valueOf(titulo.getText());
+                Estado = estado.getText().toString();
+                Descripcion = String.valueOf(descripcion.getText());
+                int radioButtonId = prioridad.getCheckedRadioButtonId();
+
+                if (radioButtonId != -1) {
+                    RadioButton radioButton = findViewById(radioButtonId);
+                    Prioridad = radioButton.getText().toString();
+
+                    ticketDAO.insertarTicket(Titulo, Estado, Prioridad, Descripcion, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Intent intent  = new Intent(actividad_ticket.this, actividad_menu.class);
+                                startActivity(intent);
+                                Toast.makeText(actividad_ticket.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(actividad_ticket.this, "Seleccione una prioridad", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-    }
-
-    private void insertarDatos() {
-        String Titulo, Estado, Prioridad, Descripcion;
-        Titulo = String.valueOf(titulo.getText());
-        Estado = estado.getText().toString();
-        Descripcion = String.valueOf(descripcion.getText());
-
-
-        int radioButtonId = prioridad.getCheckedRadioButtonId();
-
-        if (radioButtonId != -1) {
-            RadioButton radioButton = findViewById(radioButtonId);
-            Prioridad = radioButton.getText().toString();
-            String id = databaseReference.push().getKey();
-
-            ticket = new Ticket(Titulo, Estado, Prioridad, Descripcion);
-            databaseReference.child("ticket").child(id).setValue(ticket).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        Intent intent  = new Intent(actividad_ticket.this, actividad_menu.class);
-                        startActivity(intent);
-                        Toast.makeText(actividad_ticket.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        } else {
-            Toast.makeText(actividad_ticket.this, "Seleccione una prioridad", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    private void mostarNombre(){
-        FirebaseUser usuario = mAuth.getCurrentUser();
-        if (usuario != null) {
-            String nombre = usuario.getDisplayName();
-            if (nombre != null) {
-                mostrarNombre.setText(nombre);
-            }
-        }
     }
 }

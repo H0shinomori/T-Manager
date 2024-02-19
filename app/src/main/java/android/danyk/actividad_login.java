@@ -21,19 +21,20 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import DAO.UserDAO;
+
 
 public class actividad_login extends AppCompatActivity {
 
     TextView correo, contraseña;
     private Button botonLogin;
-    FirebaseAuth mAuth;
+    UserDAO userDAO = new UserDAO();
 
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser usuarioActual = mAuth.getCurrentUser();
-        if(usuarioActual != null){
+        if(userDAO.checkCurrentUser()){
             Intent intent = new Intent(getApplicationContext(), actividad_menu.class);
             startActivity(intent);
             finish();
@@ -47,7 +48,6 @@ public class actividad_login extends AppCompatActivity {
 
         correo = findViewById(R.id.email_login);
         contraseña = findViewById(R.id.contra_login);
-        mAuth = FirebaseAuth.getInstance();
         botonLogin = findViewById(R.id.boton_inicioSesion);
 
 
@@ -57,29 +57,7 @@ public class actividad_login extends AppCompatActivity {
                 String mail, password;
                 mail = String.valueOf(correo.getText());
                 password = String.valueOf(contraseña.getText());
-
-                if(TextUtils.isEmpty(mail)){
-                    Toast.makeText(actividad_login.this, "Introduzca el correo electronico", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(TextUtils.isEmpty(password)){
-                    Toast.makeText(actividad_login.this, "Introduzca la contraseña", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                mAuth.signInWithEmailAndPassword(mail,password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()){
-                                    Toast.makeText(actividad_login.this, "Inicio de sesion exitoso", Toast.LENGTH_SHORT).show();
-                                    Intent intento = new Intent(getApplicationContext(), actividad_menu.class);
-                                    startActivity(intento);
-                                    finish();
-                                }else{
-                                    Toast.makeText(actividad_login.this,"Usuario y/o contraseña incorrectos", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                userDAO.loginUser(actividad_login.this,mail,password);
             }
         });
 

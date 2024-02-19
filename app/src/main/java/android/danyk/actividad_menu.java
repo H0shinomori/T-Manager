@@ -18,7 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class actividad_menu extends AppCompatActivity {
-    FirebaseAuth auth;
+
     FloatingActionButton boton_ticket;
     private BottomNavigationView barraNavegacion;
     private FrameLayout frameLayout;
@@ -32,7 +32,6 @@ public class actividad_menu extends AppCompatActivity {
         barraNavegacion = findViewById(R.id.barraVista);
         boton_ticket =findViewById(R.id.floatingActionButton);
 
-        auth = FirebaseAuth.getInstance();
 
         boton_ticket.setOnClickListener(new View.OnClickListener() {
             @Override

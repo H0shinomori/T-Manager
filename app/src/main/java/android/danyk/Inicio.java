@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,15 +21,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import DAO.UserDAO;
+import modelo.Ticket;
 
 public class Inicio extends Fragment {
     Button boton_cerrar_sesion;
@@ -80,21 +76,18 @@ public class Inicio extends Fragment {
 
             }
         });
-
+        UserDAO userDAO = new UserDAO();
         FirebaseUser usuario = mAuth.getCurrentUser();
-        if (usuario != null) {
-            String nombre = usuario.getDisplayName();
+        if (userDAO.checkCurrentUser()) {
+            String nombre = userDAO.getUserNombre();
 
             if (nombre != null) {
-                mostrarNombre.setText(nombre);
+                 mostrarNombre.setText(nombre);
             }
             boton_cerrar_sesion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FirebaseAuth.getInstance().signOut();
-                    Intent intent = new Intent(getActivity(), actividad_login.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                    userDAO.cerrarSesion(getActivity());
                 }
             });
             return view;
