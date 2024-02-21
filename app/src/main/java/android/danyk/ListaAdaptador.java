@@ -1,5 +1,6 @@
 package android.danyk;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,17 +28,18 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
 
     @Override
     public ListaAdaptador.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = inflater.inflate(R.layout.ticket_recycle_view, null);
-        return new ListaAdaptador.ViewHolder(v);
+        View v = inflater.inflate(R.layout.ticket_recycle_view, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ListaAdaptador.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ListaAdaptador.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Ticket tickets = datos.get(position);
-        holder.titulo.setText(tickets.getTitulo());
-        holder.estado.setText(tickets.getEstado());
-        holder.prioridad.setText(tickets.getPrioridad());
+        holder.bindData(tickets);
     }
+
+
+
 
     @Override
     public int getItemCount() {
@@ -48,7 +50,7 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
         datos = items;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView titulo, estado, prioridad;
         ViewHolder(View itemView) {
             super(itemView);
@@ -63,4 +65,5 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
             prioridad.setText(ticket.getPrioridad());
         }
     }
+
 }

@@ -48,9 +48,6 @@ public class Inicio extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference("ticket");
         elementos = new ArrayList<>();
         listaAdaptador = new ListaAdaptador(elementos, this);
-        recyclerView.setAdapter(listaAdaptador);
-
-        ListaAdaptador listaAdaptador = new ListaAdaptador(elementos, this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(listaAdaptador);
@@ -62,6 +59,8 @@ public class Inicio extends Fragment {
                 for (DataSnapshot dt : snapshot.getChildren()) {
                     Ticket ticket = dt.getValue(Ticket.class);
                     elementos.add(ticket);
+                }
+                if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -73,16 +72,16 @@ public class Inicio extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
+
         UserDAO userDAO = new UserDAO();
         FirebaseUser usuario = mAuth.getCurrentUser();
-        if (userDAO.checkCurrentUser()) {
+        if (userDAO.checkCurrentUser() && usuario != null) {
             String nombre = userDAO.getUserNombre();
 
             if (nombre != null) {
-                 mostrarNombre.setText(nombre);
+                mostrarNombre.setText(nombre);
             }
             boton_cerrar_sesion.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -90,8 +89,8 @@ public class Inicio extends Fragment {
                     userDAO.cerrarSesion(getActivity());
                 }
             });
-            return view;
         }
         return view;
     }
 }
+

@@ -1,0 +1,525 @@
+Index: app/src/main/java/android/danyk/actividad_ticket.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package android.danyk;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.annotation.SuppressLint;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.RadioButton;\r\nimport android.widget.RadioGroup;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.android.material.textfield.TextInputEditText;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\n\r\npublic class actividad_ticket extends AppCompatActivity {\r\n    FirebaseAuth mAuth;\r\n    DatabaseReference databaseReference;\r\n    TextView mostrarNombre, estado;\r\n    TextInputEditText titulo, descripcion;\r\n    RadioGroup prioridad;\r\n    Button botonEnvio;\r\n    Ticket ticket;\r\n\r\n    @SuppressLint(\"MissingInflatedId\")\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.actividad_ticket);\r\n\r\n        mostrarNombre = findViewById(R.id.creacion_ticket_usuario);\r\n        mAuth = FirebaseAuth.getInstance();\r\n        databaseReference = FirebaseDatabase.getInstance().getReference();\r\n        estado = findViewById(R.id.creacion_ticket_estado);\r\n        botonEnvio = findViewById(R.id.creacion_ticket_enviar);\r\n        titulo = findViewById(R.id.creacion_ticket_titulo);\r\n        descripcion = findViewById(R.id.creacion_ticket_descripcion);\r\n        prioridad = findViewById(R.id.creacion_ticket_prioridad);\r\n\r\n        mostarNombre();\r\n        botonEnvio.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                insertarDatos();\r\n            }\r\n        });\r\n    }\r\n\r\n    private void insertarDatos() {\r\n        String Titulo, Estado, Prioridad, Descripcion;\r\n        Titulo = String.valueOf(titulo.getText());\r\n        Estado = estado.getText().toString();\r\n        Descripcion = String.valueOf(descripcion.getText());\r\n\r\n\r\n        int radioButtonId = prioridad.getCheckedRadioButtonId();\r\n\r\n        if (radioButtonId != -1) {\r\n            RadioButton radioButton = findViewById(radioButtonId);\r\n            Prioridad = radioButton.getText().toString();\r\n            String id = databaseReference.push().getKey();\r\n\r\n            ticket = new Ticket(Titulo, Estado, Prioridad, Descripcion);\r\n            databaseReference.child(\"ticket\").child(id).setValue(ticket).addOnCompleteListener(new OnCompleteListener<Void>() {\r\n                @Override\r\n                public void onComplete(@NonNull Task<Void> task) {\r\n                    if (task.isSuccessful()) {\r\n                        Intent intent  = new Intent(actividad_ticket.this, actividad_menu.class);\r\n                        startActivity(intent);\r\n                        Toast.makeText(actividad_ticket.this, \"Datos guardados correctamente\", Toast.LENGTH_SHORT).show();\r\n                    }\r\n                }\r\n            });\r\n        } else {\r\n            Toast.makeText(actividad_ticket.this, \"Seleccione una prioridad\", Toast.LENGTH_SHORT).show();\r\n        }\r\n    }\r\n\r\n\r\n    private void mostarNombre(){\r\n        FirebaseUser usuario = mAuth.getCurrentUser();\r\n        if (usuario != null) {\r\n            String nombre = usuario.getDisplayName();\r\n            if (nombre != null) {\r\n                mostrarNombre.setText(nombre);\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/android/danyk/actividad_ticket.java b/app/src/main/java/android/danyk/actividad_ticket.java
+--- a/app/src/main/java/android/danyk/actividad_ticket.java	
++++ b/app/src/main/java/android/danyk/actividad_ticket.java	
+@@ -1,25 +1,44 @@
+ package android.danyk;
+ 
+ import androidx.annotation.NonNull;
++import androidx.appcompat.app.AlertDialog;
+ import androidx.appcompat.app.AppCompatActivity;
+-
++import androidx.core.app.ActivityCompat;
++import androidx.core.content.ContextCompat;
++import android.Manifest;
+ import android.annotation.SuppressLint;
++import android.content.DialogInterface;
+ import android.content.Intent;
++import android.content.pm.PackageManager;
++import android.graphics.Bitmap;
++import android.net.Uri;
+ import android.os.Bundle;
++import android.provider.MediaStore;
+ import android.view.View;
+ import android.widget.Button;
++import android.widget.ImageView;
++import android.widget.LinearLayout;
+ import android.widget.RadioButton;
+ import android.widget.RadioGroup;
+ import android.widget.TextView;
+ import android.widget.Toast;
+-
+ import com.google.android.gms.tasks.OnCompleteListener;
++import com.google.android.gms.tasks.OnFailureListener;
++import com.google.android.gms.tasks.OnSuccessListener;
+ import com.google.android.gms.tasks.Task;
+ import com.google.android.material.textfield.TextInputEditText;
+ import com.google.firebase.auth.FirebaseAuth;
+ import com.google.firebase.auth.FirebaseUser;
+ import com.google.firebase.database.DatabaseReference;
+ import com.google.firebase.database.FirebaseDatabase;
++import com.google.firebase.database.annotations.Nullable;
++import com.google.firebase.storage.FirebaseStorage;
++import com.google.firebase.storage.StorageReference;
++import com.google.firebase.storage.UploadTask;
++
++import java.util.ArrayList;
++import java.util.List;
++import java.util.UUID;
+ 
+ public class actividad_ticket extends AppCompatActivity {
+     FirebaseAuth mAuth;
+@@ -29,6 +48,10 @@
+     RadioGroup prioridad;
+     Button botonEnvio;
+     Ticket ticket;
++    private static final int PICK_IMAGES_REQUEST = 1;
++    private List<Uri> imageUris = new ArrayList<>();
++    private LinearLayout layoutVistaPrevia;
++    private StorageReference storageReference;
+ 
+     @SuppressLint("MissingInflatedId")
+     @Override
+@@ -36,6 +59,7 @@
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.actividad_ticket);
+ 
++        layoutVistaPrevia = findViewById(R.id.layout_vistaPrevia);
+         mostrarNombre = findViewById(R.id.creacion_ticket_usuario);
+         mAuth = FirebaseAuth.getInstance();
+         databaseReference = FirebaseDatabase.getInstance().getReference();
+@@ -44,14 +68,59 @@
+         titulo = findViewById(R.id.creacion_ticket_titulo);
+         descripcion = findViewById(R.id.creacion_ticket_descripcion);
+         prioridad = findViewById(R.id.creacion_ticket_prioridad);
++        storageReference = FirebaseStorage.getInstance().getReference();
+ 
+-        mostarNombre();
++        Button botonAdjuntarImagen = findViewById(R.id.boton_adjuntarImagen);
++        botonAdjuntarImagen.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                seleccionarFuenteImagen();
++            }
++        });
+         botonEnvio.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 insertarDatos();
++                subirImagenes();
++            }
++        });
++        mostarNombre();
++    }
++
++    private void seleccionarFuenteImagen() {
++        AlertDialog.Builder builder = new AlertDialog.Builder(this);
++        builder.setTitle("Seleccionar Fuente de Imagen");
++        builder.setItems(new CharSequence[]{"Cámara", "Galería"}, new DialogInterface.OnClickListener() {
++            @Override
++            public void onClick(DialogInterface dialog, int which) {
++                switch (which) {
++                    case 0:
++                        tomarFoto();
++                        break;
++                    case 1:
++                        abrirGaleria();
++                        break;
++                }
+             }
+         });
++        builder.show();
++    }
++
++    private void tomarFoto() {
++        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
++        if (intent.resolveActivity(getPackageManager()) != null) {
++            startActivityForResult(intent, PICK_IMAGES_REQUEST);
++        } else {
++            Toast.makeText(this, "No se pudo abrir la cámara", Toast.LENGTH_SHORT).show();
++        }
++    }
++
++    private void abrirGaleria() {
++        Intent intent = new Intent();
++        intent.setType("image/*");
++        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
++        intent.setAction(Intent.ACTION_GET_CONTENT);
++        startActivityForResult(Intent.createChooser(intent, "Seleccione las imágenes"), PICK_IMAGES_REQUEST);
+     }
+ 
+     private void insertarDatos() {
+@@ -60,7 +129,6 @@
+         Estado = estado.getText().toString();
+         Descripcion = String.valueOf(descripcion.getText());
+ 
+-
+         int radioButtonId = prioridad.getCheckedRadioButtonId();
+ 
+         if (radioButtonId != -1) {
+@@ -69,11 +137,12 @@
+             String id = databaseReference.push().getKey();
+ 
+             ticket = new Ticket(Titulo, Estado, Prioridad, Descripcion);
++            assert id != null;
+             databaseReference.child("ticket").child(id).setValue(ticket).addOnCompleteListener(new OnCompleteListener<Void>() {
+                 @Override
+                 public void onComplete(@NonNull Task<Void> task) {
+                     if (task.isSuccessful()) {
+-                        Intent intent  = new Intent(actividad_ticket.this, actividad_menu.class);
++                        Intent intent = new Intent(actividad_ticket.this, actividad_menu.class);
+                         startActivity(intent);
+                         Toast.makeText(actividad_ticket.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
+                     }
+@@ -85,7 +154,7 @@
+     }
+ 
+ 
+-    private void mostarNombre(){
++    private void mostarNombre() {
+         FirebaseUser usuario = mAuth.getCurrentUser();
+         if (usuario != null) {
+             String nombre = usuario.getDisplayName();
+@@ -94,4 +163,53 @@
+             }
+         }
+     }
++
++    @Override
++    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
++        super.onActivityResult(requestCode, resultCode, data);
++
++        if (requestCode == PICK_IMAGES_REQUEST && resultCode == RESULT_OK && data != null) {
++            if (data.getClipData() != null) {
++                int count = data.getClipData().getItemCount();
++                for (int i = 0; i < count; i++) {
++                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
++                    imageUris.add(imageUri);
++                    mostrarVistaPrevia(imageUri);
++                }
++            } else if (data.getData() != null) {
++                Uri imageUri = data.getData();
++                imageUris.add(imageUri);
++                mostrarVistaPrevia(imageUri);
++            }
++        }
++    }
++
++    private void mostrarVistaPrevia(Uri imageUri) {
++        ImageView imageView = new ImageView(this);
++        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(300, 300);
++        layoutParams.setMargins(10, 0, 10, 0);
++        imageView.setLayoutParams(layoutParams);
++        imageView.setImageURI(imageUri);
++        layoutVistaPrevia.addView(imageView);
++    }
++
++    private void subirImagenes() {
++        for (int i = 0; i < imageUris.size(); i++) {
++            Uri imageUri = imageUris.get(i);
++            StorageReference imageRef = storageReference.child("Imagenes_Tickets/" + imageUri.getLastPathSegment());
++            imageRef.putFile(imageUri)
++                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
++                        @Override
++                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
++                            Toast.makeText(actividad_ticket.this, "Imagen subida correctamente", Toast.LENGTH_SHORT).show();
++                        }
++                    })
++                    .addOnFailureListener(new OnFailureListener() {
++                        @Override
++                        public void onFailure(@NonNull Exception e) {
++                            Toast.makeText(actividad_ticket.this, "Error al subir la imagen: " + e.getMessage(), Toast.LENGTH_SHORT).show();
++                        }
++                    });
++        }
++    }
+ }
+Index: app/src/main/res/layout/actividad_ticket.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:orientation=\"vertical\"\r\n    tools:context=\".actividad_ticket\">\r\n\r\n    <TextView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginTop=\"0dp\"\r\n        android:gravity=\"center\"\r\n        android:text=\"Ticket\"\r\n        android:textSize=\"50sp\"\r\n        android:textStyle=\"bold\" />\r\n\r\n    <androidx.cardview.widget.CardView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"500dp\"\r\n        android:layout_margin=\"30dp\"\r\n        app:cardCornerRadius=\"20dp\"\r\n        app:cardElevation=\"30dp\">\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"match_parent\"\r\n            android:orientation=\"vertical\">\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:orientation=\"horizontal\">\r\n\r\n                <TextView\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_marginStart=\"20dp\"\r\n                    android:paddingTop=\"10dp\"\r\n                    android:text=\"Usuario:\" />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/creacion_ticket_usuario\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\" />\r\n            </LinearLayout>\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\">\r\n\r\n                <TextView\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_marginStart=\"20dp\"\r\n                    android:text=\"Titulo:\" />\r\n\r\n                <com.google.android.material.textfield.TextInputEditText\r\n                    android:id=\"@+id/creacion_ticket_titulo\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:background=\"@null\"\r\n                    android:padding=\"10dp\" />\r\n            </LinearLayout>\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:orientation=\"horizontal\">\r\n\r\n                <TextView\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_gravity=\"center\"\r\n                    android:layout_marginStart=\"20dp\"\r\n                    android:text=\"Prioridad:\" />\r\n\r\n                <RadioGroup\r\n                    android:id=\"@+id/creacion_ticket_prioridad\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:orientation=\"horizontal\">\r\n\r\n                    <RadioButton\r\n                        android:id=\"@+id/creacion_ticket_baja\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Baja\" />\r\n\r\n                    <RadioButton\r\n                        android:id=\"@+id/creacion_ticket_media\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Media\" />\r\n\r\n                    <RadioButton\r\n                        android:id=\"@+id/creacion_ticket_alta\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Alta\" />\r\n\r\n                </RadioGroup>\r\n\r\n            </LinearLayout>\r\n\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:orientation=\"horizontal\">\r\n\r\n                <TextView\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_marginStart=\"20dp\"\r\n                    android:text=\"Estado:\" />\r\n\r\n                <TextView\r\n\r\n                    android:id=\"@+id/creacion_ticket_estado\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\" (por defecto) PENDIENTE\" />\r\n            </LinearLayout>\r\n\r\n            <TextView\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginStart=\"20dp\"\r\n                android:layout_marginTop=\"5dp\"\r\n                android:text=\"Descripcion:\" />\r\n\r\n            <com.google.android.material.textfield.TextInputEditText\r\n                android:id=\"@+id/creacion_ticket_descripcion\"\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"200dp\"\r\n                android:background=\"@null\"\r\n                android:gravity=\"top|start\"\r\n                android:padding=\"10dp\" />\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:orientation=\"horizontal\">\r\n\r\n                <Button\r\n                    android:id=\"@+id/creacion_ticket_cancelar\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"Cancelar\" />\r\n\r\n                <Button\r\n                    android:id=\"@+id/creacion_ticket_enviar\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"Enviar\" />\r\n\r\n            </LinearLayout>\r\n        </LinearLayout>\r\n    </androidx.cardview.widget.CardView>\r\n\r\n\r\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/actividad_ticket.xml b/app/src/main/res/layout/actividad_ticket.xml
+--- a/app/src/main/res/layout/actividad_ticket.xml	
++++ b/app/src/main/res/layout/actividad_ticket.xml	
+@@ -4,29 +4,33 @@
+     xmlns:tools="http://schemas.android.com/tools"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
++    android:background="@color/black"
+     android:orientation="vertical"
++    android:padding="16dp"
+     tools:context=".actividad_ticket">
+ 
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+-        android:layout_marginTop="0dp"
++        android:layout_marginTop="16dp"
+         android:gravity="center"
+         android:text="Ticket"
+-        android:textSize="50sp"
++        android:textColor="@color/white"
++        android:textSize="40dp"
+         android:textStyle="bold" />
+ 
+     <androidx.cardview.widget.CardView
+         android:layout_width="match_parent"
+-        android:layout_height="500dp"
+-        android:layout_margin="30dp"
++        android:layout_height="wrap_content"
++        android:layout_marginTop="16dp"
+         app:cardCornerRadius="20dp"
+-        app:cardElevation="30dp">
++        app:cardElevation="20dp">
+ 
+         <LinearLayout
+             android:layout_width="match_parent"
+-            android:layout_height="match_parent"
+-            android:orientation="vertical">
++            android:layout_height="wrap_content"
++            android:orientation="vertical"
++            android:padding="16dp">
+ 
+             <LinearLayout
+                 android:layout_width="match_parent"
+@@ -36,14 +40,16 @@
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+-                    android:layout_marginStart="20dp"
+-                    android:paddingTop="10dp"
+-                    android:text="Usuario:" />
++                    android:text="USUARIO:"
++                    android:textColor="@color/black"
++                    android:textSize="18sp"
++                    android:textStyle="bold" />
+ 
+                 <TextView
+                     android:id="@+id/creacion_ticket_usuario"
+                     android:layout_width="wrap_content"
+-                    android:layout_height="wrap_content" />
++                    android:layout_height="wrap_content"
++                    android:textSize="18sp" />
+             </LinearLayout>
+ 
+             <LinearLayout
+@@ -54,14 +60,19 @@
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_marginStart="20dp"
+-                    android:text="Titulo:" />
++                    android:text="Titulo:"
++                    android:textColor="@color/black"
++                    android:textSize="18dp"
++                    android:textStyle="bold" />
+ 
+                 <com.google.android.material.textfield.TextInputEditText
+                     android:id="@+id/creacion_ticket_titulo"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:background="@null"
+-                    android:padding="10dp" />
++
++                    android:padding="10dp"
++                    android:textSize="18dp" />
+             </LinearLayout>
+ 
+             <LinearLayout
+@@ -74,12 +85,15 @@
+                     android:layout_height="wrap_content"
+                     android:layout_gravity="center"
+                     android:layout_marginStart="20dp"
+-                    android:text="Prioridad:" />
++                    android:text="Prioridad:"
++                    android:textColor="@color/black"
++                    android:textSize="18dp"
++                    android:textStyle="bold" />
+ 
+                 <RadioGroup
+                     android:id="@+id/creacion_ticket_prioridad"
+                     android:layout_width="wrap_content"
+-                    android:layout_height="wrap_content"
++                    android:layout_height="40dp"
+                     android:orientation="horizontal">
+ 
+                     <RadioButton
+@@ -114,14 +128,18 @@
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_marginStart="20dp"
+-                    android:text="Estado:" />
++                    android:text="Estado:"
++                    android:textColor="@color/black"
++                    android:textSize="18dp"
++                    android:textStyle="bold" />
+ 
+                 <TextView
+-
+                     android:id="@+id/creacion_ticket_estado"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+-                    android:text=" (por defecto) PENDIENTE" />
++                    android:text=" Pendiente"
++
++                    android:textSize="18dp" />
+             </LinearLayout>
+ 
+             <TextView
+@@ -129,7 +147,10 @@
+                 android:layout_height="wrap_content"
+                 android:layout_marginStart="20dp"
+                 android:layout_marginTop="5dp"
+-                android:text="Descripcion:" />
++                android:text="Descripcion:"
++                android:textColor="@color/black"
++                android:textSize="18dp"
++                android:textStyle="bold" />
+ 
+             <com.google.android.material.textfield.TextInputEditText
+                 android:id="@+id/creacion_ticket_descripcion"
+@@ -137,7 +158,33 @@
+                 android:layout_height="200dp"
+                 android:background="@null"
+                 android:gravity="top|start"
+-                android:padding="10dp" />
++                android:padding="10dp"
++                android:textSize="18dp" />
++
++            <com.google.android.material.button.MaterialButton
++                android:id="@+id/boton_adjuntarImagen"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:layout_marginTop="16dp"
++                android:text="Adjuntar imágenes"
++                android:textColor="@android:color/white"
++                app:cornerRadius="4dp" />
++
++
++
++                <HorizontalScrollView
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content">
++
++                    <LinearLayout
++                        android:id="@+id/layout_vistaPrevia"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:orientation="horizontal">
++
++                    </LinearLayout>
++                </HorizontalScrollView>
++
+ 
+             <LinearLayout
+                 android:layout_width="match_parent"
+@@ -146,19 +193,19 @@
+ 
+                 <Button
+                     android:id="@+id/creacion_ticket_cancelar"
+-                    android:layout_width="wrap_content"
++                    android:layout_width="0dp"
+                     android:layout_height="wrap_content"
++                    android:layout_weight="1"
+                     android:text="Cancelar" />
+ 
+                 <Button
+                     android:id="@+id/creacion_ticket_enviar"
+-                    android:layout_width="wrap_content"
++                    android:layout_width="0dp"
+                     android:layout_height="wrap_content"
++                    android:layout_weight="1"
+                     android:text="Enviar" />
+ 
+             </LinearLayout>
+         </LinearLayout>
+     </androidx.cardview.widget.CardView>
+-
+-
+ </LinearLayout>
+\ No newline at end of file
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id(\"com.android.application\")\r\n    id(\"com.google.gms.google-services\")\r\n}\r\n\r\nandroid {\r\n    namespace = \"android.danyk\"\r\n    compileSdk = 34\r\n\r\n    defaultConfig {\r\n        applicationId = \"android.danyk\"\r\n        minSdk = 24\r\n        targetSdk = 33\r\n        versionCode = 1\r\n        versionName = \"1.0\"\r\n\r\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            isMinifyEnabled = false\r\n            proguardFiles(\r\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\r\n                \"proguard-rules.pro\"\r\n            )\r\n        }\r\n    }\r\n    buildFeatures{\r\n        viewBinding = true\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility = JavaVersion.VERSION_1_8\r\n        targetCompatibility = JavaVersion.VERSION_1_8\r\n    }\r\n    buildFeatures {\r\n        viewBinding = true\r\n    }\r\n}\r\n\r\ndependencies {\r\n\r\n    implementation(\"androidx.appcompat:appcompat:1.6.1\")\r\n    implementation(\"com.google.android.material:material:1.11.0\")\r\n    implementation(\"androidx.constraintlayout:constraintlayout:2.1.4\")\r\n    implementation(\"androidx.lifecycle:lifecycle-livedata-ktx:2.7.0\")\r\n    implementation(\"androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0\")\r\n    implementation(\"com.google.firebase:firebase-database:20.3.0\")\r\n    implementation(\"com.google.firebase:firebase-auth:22.3.0\")\r\n    testImplementation(\"junit:junit:4.13.2\")\r\n    androidTestImplementation(\"androidx.test.ext:junit:1.1.5\")\r\n    androidTestImplementation(\"androidx.test.espresso:espresso-core:3.5.1\")\r\n    implementation (\"com.google.firebase:firebase-firestore:24.10.0\")\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	
++++ b/app/build.gradle.kts	
+@@ -46,10 +46,10 @@
+     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+     implementation("com.google.firebase:firebase-database:20.3.0")
+-    implementation("com.google.firebase:firebase-auth:22.3.0")
++    implementation("com.google.firebase:firebase-auth:22.3.1")
+     testImplementation("junit:junit:4.13.2")
+     androidTestImplementation("androidx.test.ext:junit:1.1.5")
+     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+-    implementation ("com.google.firebase:firebase-firestore:24.10.0")
+-
++    implementation ("com.google.firebase:firebase-firestore:24.10.2")
++    implementation ("com.google.firebase:firebase-storage:20.3.0")
+ }
+\ No newline at end of file
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\">\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\r\n        android:fullBackupContent=\"@xml/backup_rules\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.Danyk\"\r\n        tools:targetApi=\"31\">\r\n        <activity\r\n            android:name=\".actividad_ticket\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".actividad_login\"\r\n            android:exported=\"true\"\r\n            android:windowSoftInputMode=\"adjustPan\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n        <activity\r\n            android:name=\".actividad_registro\"\r\n            android:exported=\"true\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n        <activity\r\n            android:name=\".actividad_menu\"\r\n            android:exported=\"true\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	
++++ b/app/src/main/AndroidManifest.xml	
+@@ -2,6 +2,15 @@
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools">
+ 
++    <uses-feature
++        android:name="android.hardware.camera"
++        android:required="false" />
++    <uses-permission android:name="android.permission.CAMERA" />
++    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
++        android:maxSdkVersion="32" />
++    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
++        android:maxSdkVersion="32" />
++
+     <application
+         android:allowBackup="true"
+         android:dataExtractionRules="@xml/data_extraction_rules"
+Index: app/src/main/java/android/danyk/Ticket.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package android.danyk;\r\n\r\n\r\nimport com.google.firebase.database.IgnoreExtraProperties;\r\n\r\n@IgnoreExtraProperties\r\npublic class Ticket {\r\n    public String titulo;\r\n    public String estado;\r\n    public String prioridad;\r\n    public String descripcion;\r\n\r\n    public Ticket() {\r\n\r\n    }\r\n\r\n    public Ticket(String titulo, String estado, String prioridad, String descripcion) {\r\n        this.titulo = titulo;\r\n        this.estado = estado;\r\n        this.prioridad = prioridad;\r\n        this.descripcion = descripcion;\r\n    }\r\n\r\n    public String getTitulo() {\r\n        return titulo;\r\n    }\r\n\r\n    public void setTitulo(String titulo) {\r\n        this.titulo = titulo;\r\n    }\r\n\r\n    public String getEstado() {\r\n        return estado;\r\n    }\r\n\r\n    public void setEstado(String estado) {\r\n        this.estado = estado;\r\n    }\r\n\r\n    public String getPrioridad() {\r\n        return prioridad;\r\n    }\r\n\r\n    public void setPrioridad(String prioridad) {\r\n        this.prioridad = prioridad;\r\n    }\r\n\r\n    public String getDescripcion() {\r\n        return descripcion;\r\n    }\r\n\r\n    public void setDescripcion(String descripcion) {\r\n        this.descripcion = descripcion;\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/android/danyk/Ticket.java b/app/src/main/java/android/danyk/Ticket.java
+--- a/app/src/main/java/android/danyk/Ticket.java	
++++ b/app/src/main/java/android/danyk/Ticket.java	
+@@ -3,6 +3,8 @@
+ 
+ import com.google.firebase.database.IgnoreExtraProperties;
+ 
++import java.util.ArrayList;
++
+ @IgnoreExtraProperties
+ public class Ticket {
+     public String titulo;
+@@ -52,4 +54,5 @@
+     public void setDescripcion(String descripcion) {
+         this.descripcion = descripcion;
+     }
++
+ }
+Index: .idea/appInsightsSettings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AppInsightsSettings\">\r\n    <option name=\"tabSettings\">\r\n      <map>\r\n        <entry key=\"Firebase Crashlytics\">\r\n          <value>\r\n            <InsightsFilterSettings>\r\n              <option name=\"connection\">\r\n                <ConnectionSetting>\r\n                  <option name=\"appId\" value=\"PLACEHOLDER\" />\r\n                  <option name=\"mobileSdkAppId\" value=\"\" />\r\n                  <option name=\"projectId\" value=\"\" />\r\n                  <option name=\"projectNumber\" value=\"\" />\r\n                </ConnectionSetting>\r\n              </option>\r\n              <option name=\"signal\" value=\"SIGNAL_UNSPECIFIED\" />\r\n              <option name=\"timeIntervalDays\" value=\"THIRTY_DAYS\" />\r\n              <option name=\"visibilityType\" value=\"ALL\" />\r\n            </InsightsFilterSettings>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n</project>
+===================================================================
+diff --git a/.idea/appInsightsSettings.xml b/.idea/appInsightsSettings.xml
+--- a/.idea/appInsightsSettings.xml	
++++ b/.idea/appInsightsSettings.xml	
+@@ -8,10 +8,10 @@
+             <InsightsFilterSettings>
+               <option name="connection">
+                 <ConnectionSetting>
+-                  <option name="appId" value="PLACEHOLDER" />
+-                  <option name="mobileSdkAppId" value="" />
+-                  <option name="projectId" value="" />
+-                  <option name="projectNumber" value="" />
++                  <option name="appId" value="android.danyk" />
++                  <option name="mobileSdkAppId" value="1:544585095886:android:3cb3d7159ff6c4de498e9f" />
++                  <option name="projectId" value="danyk-830a4" />
++                  <option name="projectNumber" value="544585095886" />
+                 </ConnectionSetting>
+               </option>
+               <option name="signal" value="SIGNAL_UNSPECIFIED" />

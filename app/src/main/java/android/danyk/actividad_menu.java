@@ -1,11 +1,15 @@
 package android.danyk;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,12 +17,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
+
+import modelo.Ticket;
 
 public class actividad_menu extends AppCompatActivity {
-
     FloatingActionButton boton_ticket;
     private BottomNavigationView barraNavegacion;
     private FrameLayout frameLayout;
@@ -30,8 +35,7 @@ public class actividad_menu extends AppCompatActivity {
         setContentView(R.layout.actividad_menu);
         frameLayout = findViewById(R.id.frameLayout);
         barraNavegacion = findViewById(R.id.barraVista);
-        boton_ticket =findViewById(R.id.floatingActionButton);
-
+        boton_ticket = findViewById(R.id.floatingActionButton);
 
         boton_ticket.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,22 +60,20 @@ public class actividad_menu extends AppCompatActivity {
                     cargarFragmento(new Historial(), false);
                 }
                 return true;
-
             }
         });
         cargarFragmento(new Inicio(), true);
-
     }
 
     private void cargarFragmento(Fragment fragment, boolean isAppInitialized) {
-        FragmentManager fragmento = getSupportFragmentManager();
-        FragmentTransaction fragmentoTrans = fragmento.beginTransaction();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (isAppInitialized) {
-            fragmentoTrans.add(R.id.frameLayout, fragment);
+            fragmentTransaction.add(R.id.frameLayout, fragment);
         } else {
-            fragmentoTrans.replace(R.id.frameLayout, fragment);
+            fragmentTransaction.replace(R.id.frameLayout, fragment);
         }
-        fragmentoTrans.replace(R.id.frameLayout, fragment);
-        fragmentoTrans.commit();
+        fragmentTransaction.commit();
     }
+
 }
