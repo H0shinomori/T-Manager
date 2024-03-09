@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_color"
     android:orientation="vertical"
-    tools:context=".actividad_registro">
+    tools:context=".Actividades.actividad_registro">
 
     <View
         android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="36sp"
-                android:textStyle="bold" />
+                style="@style/fuenteNegrita" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nombre_registro"
@@ -85,21 +85,16 @@
                 android:textColorHighlight="@color/cardview_dark_background"
                 android:textColorHint="@color/grey" />
 
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"></View>
-
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/boton_registroCompleto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
-                android:alpha="0.8"
                 android:background="@drawable/button_login"
                 android:text="Registrate"
-                app:backgroundTint="@color/secundario" />
+                style="@style/fuenteNegrita"
+                app:backgroundTint="@color/azul_marino" />
 
         </LinearLayout>
 

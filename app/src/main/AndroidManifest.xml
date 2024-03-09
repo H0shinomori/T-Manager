@@ -20,36 +20,30 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".actividad_ticket"
-            android:exported="false" />
+            android:name=".Animaciones.Animacion_inicio"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
-            android:name=".actividad_login"
+            android:name=".Actividades.actividad_login"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
-            android:name=".actividad_registro"
+            android:name=".Actividades.actividad_registro"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
-            android:name=".actividad_menu"
+            android:name=".Actividades.actividad_menu"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+        <activity
+            android:name=".Actividades.actividad_ticket"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -60,7 +54,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

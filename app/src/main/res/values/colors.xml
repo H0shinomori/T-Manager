@@ -8,8 +8,23 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#AAAAAA</color>
+
+    <color name="azulito">#535BF3</color>
     <color name="cuaternario">#EFF3FF</color>
     <color name="secundario">#7D5683</color>
     <color name="primario">#140e36</color>
     <color name="terciario">#c9bfb5</color>
+
+    <color name="pastel_uno">#CCE5FF</color>
+    <color name="pastel_dos">#87CEEB</color>
+    <color name="pastel_tres">#AED6F1</color>
+    <color name="pastel_cuatro">#BFEFFF</color>
+    <color name="pastel_cinco">#E6F7FF</color>
+    <color name="pastel_seis">#D5E4F9</color>
+    <color name="pastel_siete">#B0DFE6</color>
+    <color name="pastel_ocho">#7F93B6</color>
+    <color name="pastel_nueve">#4968B8</color>
+    <color name="pastel_diez">#F4F8FD</color>
+    <color name="azul_marino">#002366</color>
+    <color name="transparente">#00FF0000</color>
 </resources>

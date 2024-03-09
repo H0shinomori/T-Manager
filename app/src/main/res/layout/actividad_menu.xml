@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#26AAAAAA"
-    tools:context=".actividad_menu">
+    tools:context=".Actividades.actividad_menu">
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -40,11 +40,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/ticket_logo"
         app:layout_anchor="@id/bottomAppBar"
         app:borderWidth="0dp"
         app:maxImageSize="30dp"
-        app:tint="#8A8A8A" />
+        app:tint="@color/azulito" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

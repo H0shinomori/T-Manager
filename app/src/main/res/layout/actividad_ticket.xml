@@ -4,27 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/pastel_cinco"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".actividad_ticket">
+    tools:context=".Actividades.actividad_ticket">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Ticket"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        android:textStyle="bold" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="20dp">
+        app:cardCornerRadius="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,7 +32,7 @@
                     android:text="USUARIO:"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    style="@style/fuenteNegrita" />
 
                 <TextView
                     android:id="@+id/creacion_ticket_usuario"
@@ -63,7 +52,7 @@
                     android:text="Titulo:"
                     android:textColor="@color/black"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    style="@style/fuenteNegrita" />
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/creacion_ticket_titulo"
@@ -87,7 +76,7 @@
                     android:text="Prioridad:"
                     android:textColor="@color/black"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    style="@style/fuenteNegrita" />
 
                 <RadioGroup
                     android:id="@+id/creacion_ticket_prioridad"
@@ -127,7 +116,7 @@
                     android:text="Estado:"
                     android:textColor="@color/black"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    style="@style/fuenteNegrita" />
 
                 <TextView
                     android:id="@+id/creacion_ticket_estado"
@@ -145,7 +134,7 @@
                 android:text="Descripcion:"
                 android:textColor="@color/black"
                 android:textSize="18dp"
-                android:textStyle="bold" />
+                style="@style/fuenteNegrita" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/creacion_ticket_descripcion"
@@ -163,6 +152,7 @@
                 android:layout_marginTop="16dp"
                 android:text="Adjuntar imágenes"
                 android:textColor="@android:color/white"
+                style="@style/fuenteNegrita"
                 app:cornerRadius="4dp" />
 
             <HorizontalScrollView
@@ -186,14 +176,16 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cancelar" />
+                    android:text="Cancelar"
+                    style="@style/fuenteNegrita"/>
 
                 <Button
                     android:id="@+id/creacion_ticket_enviar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Enviar" />
+                    android:text="Enviar"
+                    style="@style/fuenteNegrita"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

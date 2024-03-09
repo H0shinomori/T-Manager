@@ -10,6 +10,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/primario</item>
         <!-- Customize your theme here. -->
+        <item name="android:fontFamily">@font/nexalight</item>
     </style>
 
     <style name="Theme.Danyk.NoActionBar">
@@ -25,4 +26,12 @@
         <item name="labelVisibilityMode">selected</item>
         <item name="itemHorizontalTranslationEnabled">false</item>
     </style>
+    <style name="fuenteNormal">
+        <item name="android:fontFamily">@font/nexalight</item>
+    </style>
+    <style name="fuenteNegrita">
+        <item name="android:fontFamily">@font/nexaheavy</item>
+    </style>
+
+
 </resources>
