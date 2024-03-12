@@ -18,29 +18,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Danyk"
         tools:targetApi="31">
-
+        <activity
+            android:name=".Actividades.actividad_editarTicket"
+            android:exported="false" />
         <activity
             android:name=".Animaciones.Animacion_inicio"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Actividades.actividad_login"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".Actividades.actividad_registro"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Actividades.actividad_menu"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Actividades.actividad_ticket"
             android:exported="false" />

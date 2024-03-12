@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:padding="60dp"
     app:cardCornerRadius="20dp"
-    app:cardElevation="4dp"
+    app:cardElevation="5dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -31,7 +31,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/ticket_logo2" />
+                app:srcCompat="@drawable/ticket_logo" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

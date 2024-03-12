@@ -14,6 +14,7 @@ public class Ticket {
     private String prioridad;
     private String descripcion;
     private List<String> imageUris;
+    private boolean guardado;
 
     public Ticket() {
     }
@@ -26,16 +27,13 @@ public class Ticket {
         this.imageUris = imageUris;
     }
 
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("titulo", titulo);
-        map.put("estado", estado);
-        map.put("prioridad", prioridad);
-        map.put("descripcion", descripcion);
-        map.put("imageUris", imageUris);
-        return map;
+    public boolean isGuardado() {
+        return guardado;
     }
 
+    public void setGuardado(boolean guardado) {
+        this.guardado = guardado;
+    }
     public String getTitulo() {
         return titulo;
     }

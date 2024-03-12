@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/white"
         android:padding="16dp">
 
         <LinearLayout
@@ -96,25 +97,25 @@
                 android:textSize="18sp" />
         </ScrollView>
 
-        <LinearLayout
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:scrollbars="none">
 
-            <ImageView
-                android:id="@+id/imageViewPreview1"
+            <LinearLayout
+                android:id="@+id/layout_vistaPreviaImagen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:scaleType="centerCrop" />
-
-            <ImageView
-                android:id="@+id/imageViewPreview2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:scaleType="centerCrop" />
-        </LinearLayout>
+                android:orientation="horizontal"/>
+        </HorizontalScrollView>
+        <Button
+            android:id="@+id/boton_editarTicket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Editar"
+            style="@style/fuenteNegrita"
+            android:layout_gravity="center"/>
     </LinearLayout>
+
 
 </androidx.cardview.widget.CardView>

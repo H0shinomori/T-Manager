@@ -95,7 +95,6 @@ public class actividad_ticket extends AppCompatActivity {
         botonEnvio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertarDatos();
                 subirImagenes();
             }
         });
@@ -187,6 +186,7 @@ public class actividad_ticket extends AppCompatActivity {
 
 
     private void subirImagenes() {
+        List<String> imageUrls = new ArrayList<>();
         for (int i = 0; i < imageUris.size(); i++) {
             Uri imagenUri = imageUris.get(i);
             String imagenNombre = "imagen_" + System.currentTimeMillis() + ".jpg";
@@ -199,8 +199,10 @@ public class actividad_ticket extends AppCompatActivity {
                 imageRef.putBytes(bytes)
                         .addOnSuccessListener(taskSnapshot -> {
                             imageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
-                                guardarURLFirestore(downloadUri.toString());
-                                System.out.println(downloadUri);
+                                imageUrls.add(downloadUri.toString());
+                                if (imageUrls.size() == imageUris.size()) {
+                                    insertarDatos(imageUrls);
+                                }
                             });
                         })
                         .addOnFailureListener(Throwable::printStackTrace);
@@ -210,19 +212,7 @@ public class actividad_ticket extends AppCompatActivity {
         }
     }
 
-    private void guardarURLFirestore(String imageURL) {
-        Map<String, Object> ticketData = new HashMap<>();
-        ticketData.put("imagenUri", imageURL);
 
-        TicketDAO ticketDAO = new TicketDAO();
-
-        ticketDAO.subirURlImagen(ticketData, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                task.isSuccessful();
-            }
-        });
-    }
     private byte[] getBytes(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
         int bufferSize = 1024;
@@ -273,7 +263,7 @@ public class actividad_ticket extends AppCompatActivity {
                 ex.printStackTrace();
             }
             if (photoFile != null) {
-                photoUri = FileProvider.getUriForFile(this,"img",photoFile);
+                photoUri = FileProvider.getUriForFile(this, "img", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -284,7 +274,7 @@ public class actividad_ticket extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        return File.createTempFile(imageFileName,".jpg",storageDir);
+        return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
 
     private void abrirGaleria() {
@@ -305,7 +295,7 @@ public class actividad_ticket extends AppCompatActivity {
         }
     }
 
-    private void insertarDatos() {
+    private void insertarDatos(List<String> imageUrls) {
         String Titulo, Estado, Prioridad, Descripcion;
         Titulo = String.valueOf(titulo.getText());
         Estado = estado.getText().toString();
@@ -317,14 +307,9 @@ public class actividad_ticket extends AppCompatActivity {
             RadioButton radioButton = findViewById(radioButtonId);
             Prioridad = radioButton.getText().toString();
 
-            List<String> uris = new ArrayList<>();
-            for (Uri uri : imageUris) {
-                uris.add(uri.toString());
-            }
-
             TicketDAO ticketDAO = new TicketDAO();
 
-            ticketDAO.insertarTicket(Titulo, Estado, Prioridad, Descripcion, uris, new OnCompleteListener<Void>() {
+            ticketDAO.insertarTicket(Titulo, Estado, Prioridad, Descripcion, imageUrls, new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
@@ -335,10 +320,7 @@ public class actividad_ticket extends AppCompatActivity {
                     }
                 }
             });
-        } else {
-            Toast.makeText(actividad_ticket.this, "Seleccione una prioridad", Toast.LENGTH_SHORT).show();
         }
     }
 }
-
 
