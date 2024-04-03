@@ -13,15 +13,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.danyk.R;
+import android.danyk.Utilidades.ImagePreviewItem;
+import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,7 +32,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -46,10 +47,8 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import android.danyk.DAO.TicketDAO;
 import android.danyk.DAO.UserDAO;
@@ -63,17 +62,18 @@ public class actividad_ticket extends AppCompatActivity {
     private static final int PICK_IMAGES_REQUEST = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private final List<Uri> imageUris = new ArrayList<>();
-    private LinearLayout layoutVistaPrevia;
+    private LinearLayout linearLayoutVistaPrevia;
     private StorageReference storageReference;
     private static final int SOLICITUD_CAMARA = 100;
-    private Uri photoUri;
+    File photoFile;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actividad_ticket);
 
-        layoutVistaPrevia = findViewById(R.id.layout_vistaPrevia);
+        linearLayoutVistaPrevia = findViewById(R.id.linear_layout_vista_previa);
         TextView mostrarNombre = findViewById(R.id.creacion_ticket_usuario);
         estado = findViewById(R.id.creacion_ticket_estado);
         Button botonEnvio = findViewById(R.id.creacion_ticket_enviar);
@@ -81,8 +81,6 @@ public class actividad_ticket extends AppCompatActivity {
         descripcion = findViewById(R.id.creacion_ticket_descripcion);
         prioridad = findViewById(R.id.creacion_ticket_prioridad);
         storageReference = FirebaseStorage.getInstance().getReference();
-
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"})
 
         Button botonAdjuntarImagen = findViewById(R.id.boton_adjuntarImagen);
         botonAdjuntarImagen.setOnClickListener(new View.OnClickListener() {
@@ -108,110 +106,109 @@ public class actividad_ticket extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGES_REQUEST && resultCode == RESULT_OK && data != null) {
-            if (data.getClipData() != null) {
-                int count = data.getClipData().getItemCount();
-                for (int i = 0; i < count; i++) {
-                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                    imageUris.add(imageUri);
-                    Bitmap imageBitmap = obtenerBitmapDesdeUri(imageUri);
-                    mostrarVistaPrevia(imageBitmap);
-                }
-            } else if (data.getData() != null) {
-                Uri imageUri = data.getData();
-                imageUris.add(imageUri);
-                Bitmap imageBitmap = obtenerBitmapDesdeUri(imageUri);
-                mostrarVistaPrevia(imageBitmap);
+            if (data.getData() != null) {
+                Uri selectedImageUri = data.getData();
+                imageUris.add(selectedImageUri);
+                mostrarVistaPrevia();
             }
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            if (photoUri != null) {
+            // Se capturó una imagen desde la cámara
+            if (photoFile != null) {
+                // Agregar la URI de la imagen capturada a la lista de URIs
+                Uri photoUri = Uri.fromFile(photoFile);
                 imageUris.add(photoUri);
-                Bitmap imageBitmap = obtenerBitmapDesdeUri(photoUri);
-                mostrarVistaPrevia(imageBitmap);
+
+                // Mostrar la vista previa actualizada
+                mostrarVistaPrevia();
             }
         }
     }
 
     private Bitmap obtenerBitmapDesdeUri(Uri uri) {
         try {
-            return MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            if (inputStream != null) {
+                return BitmapFactory.decodeStream(inputStream);
+            } else {
+                return null;
+            }
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
     }
 
-    private void mostrarVistaPrevia(Bitmap imageBitmap) {
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 500, 350, false);
-        Bitmap rotatedBitmap = rotarSiEsNecesario(imageUris.get(imageUris.size() - 1), resizedBitmap);
-        ImageView imageView = new ImageView(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(20, 10, 20, 10);
-        imageView.setLayoutParams(layoutParams);
-        imageView.setImageBitmap(rotatedBitmap);
-        layoutVistaPrevia.addView(imageView);
-        layoutVistaPrevia.setVisibility(View.VISIBLE);
-    }
+    private void mostrarVistaPrevia() {
+        linearLayoutVistaPrevia.removeAllViews();
+        for (int i = 0; i < imageUris.size(); i++) {
+            View previewView = LayoutInflater.from(this).inflate(R.layout.image_preview_item, null);
+            String imageName = getFileNameFromUri(imageUris.get(i));
+            TextView imageNameTextView = previewView.findViewById(R.id.image_name);
+            imageNameTextView.setText(imageName);
+            ImageView eliminarFoto = previewView.findViewById(R.id.eliminarFoto);
+            int finalI = i;
+            eliminarFoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    imageUris.remove(finalI);
+                    mostrarVistaPrevia();
+                }
+            });
 
-    private Bitmap rotarSiEsNecesario(Uri imageUri, Bitmap imageBitmap) {
-        int orientacion = cogerOrientacionImagen(imageUri);
-
-        switch (orientacion) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                return rotarBitmap(imageBitmap, 90);
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                return rotarBitmap(imageBitmap, 180);
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                return rotarBitmap(imageBitmap, 270);
-            default:
-                return imageBitmap;
+            linearLayoutVistaPrevia.addView(previewView);
         }
     }
 
-    private int cogerOrientacionImagen(Uri imageUri) {
-        try {
-            InputStream input = getContentResolver().openInputStream(imageUri);
-            ExifInterface exifInterface = new ExifInterface(input);
-            return exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ExifInterface.ORIENTATION_NORMAL;
+    @SuppressLint("Range")
+    private String getFileNameFromUri(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
         }
+        if (result == null) {
+            result = uri.getLastPathSegment();
+        }
+        return result;
     }
-
-    private Bitmap rotarBitmap(Bitmap bitmap, int degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
-
 
     private void subirImagenes() {
         List<String> imageUrls = new ArrayList<>();
-        for (int i = 0; i < imageUris.size(); i++) {
-            Uri imagenUri = imageUris.get(i);
-            String imagenNombre = "imagen_" + System.currentTimeMillis() + ".jpg";
-            StorageReference imageRef = storageReference.child("Imagenes_Tickets").child(imagenNombre);
+        if (imageUris.isEmpty()) {
+            insertarDatos(imageUrls);
+        } else {
+            for (int i = 0; i < imageUris.size(); i++) {
+                Uri imagenUri = imageUris.get(i);
+                String imagenNombre = "imagen_" + System.currentTimeMillis() + ".jpg";
+                StorageReference imageRef = storageReference.child("Imagenes_Tickets").child(imagenNombre);
 
-            try {
-                InputStream inputStream = getContentResolver().openInputStream(imagenUri);
-                assert inputStream != null;
-                byte[] bytes = getBytes(inputStream);
-                imageRef.putBytes(bytes)
-                        .addOnSuccessListener(taskSnapshot -> {
-                            imageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
-                                imageUrls.add(downloadUri.toString());
-                                if (imageUrls.size() == imageUris.size()) {
-                                    insertarDatos(imageUrls);
-                                }
-                            });
-                        })
-                        .addOnFailureListener(Throwable::printStackTrace);
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(imagenUri);
+                    assert inputStream != null;
+                    byte[] bytes = getBytes(inputStream);
+                    imageRef.putBytes(bytes)
+                            .addOnSuccessListener(taskSnapshot -> {
+                                imageRef.getDownloadUrl().addOnSuccessListener(downloadUri -> {
+                                    imageUrls.add(downloadUri.toString());
+                                    if (imageUrls.size() == imageUris.size()) {
+                                        insertarDatos(imageUrls);
+                                    }
+                                });
+                            })
+                            .addOnFailureListener(Throwable::printStackTrace);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
-
 
     private byte[] getBytes(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
@@ -256,25 +253,26 @@ public class actividad_ticket extends AppCompatActivity {
     private void abrirCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File photoFile = null;
+            Uri photoUri = null;
             try {
-                photoFile = createImageFile();
+                photoUri = createImageFile();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            if (photoFile != null) {
-                photoUri = FileProvider.getUriForFile(this, "img", photoFile);
+            if (photoUri != null) {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
     }
 
-    private File createImageFile() throws IOException {
+    private Uri createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        return File.createTempFile(imageFileName, ".jpg", storageDir);
+        File imageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
+        photoFile = imageFile; // Guardar la referencia al archivo de la foto
+        return FileProvider.getUriForFile(this, "img", imageFile);
     }
 
     private void abrirGaleria() {
@@ -323,4 +321,3 @@ public class actividad_ticket extends AppCompatActivity {
         }
     }
 }
-

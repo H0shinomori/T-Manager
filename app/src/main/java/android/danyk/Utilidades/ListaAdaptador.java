@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import android.danyk.modelo.Ticket;
 
@@ -30,9 +32,9 @@ import com.bumptech.glide.Glide;
 
 public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHolder> {
     private List<Ticket> datos;
-    private List<Ticket> guardados;
-    private LayoutInflater inflater;
-    private Context context;
+    private final List<Ticket> guardados;
+    private final LayoutInflater inflater;
+    private final Context context;
 
     public ListaAdaptador(List<Ticket> itemList, Fragment context) {
         this.inflater = LayoutInflater.from(context.getContext());
@@ -46,11 +48,11 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
     public ListaAdaptador.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         @SuppressLint("InflateParams")
         View v = inflater.inflate(R.layout.ticket_recycle_view, null);
-        return new ListaAdaptador.ViewHolder(v);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ListaAdaptador.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ListaAdaptador.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Ticket tickets = datos.get(position);
         holder.titulo.setText(tickets.getTitulo());
         holder.estado.setText(tickets.getEstado());
@@ -68,6 +70,8 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
                 LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
                 @SuppressLint({"MissingInflatedId", "LocalSuppress"})
                 Button botonEditar = dialogView.findViewById(R.id.boton_editarTicket);
+                @SuppressLint({"MissingInflatedId", "LocalSuppress"})
+                ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
 
                 tituloPreview.setText(tickets.getTitulo());
                 estadoPreview.setText(tickets.getEstado());
@@ -76,9 +80,10 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
 
                 layoutVistaPreviaImagen.removeAllViews();
 
-                if (tickets.getImageUris() != null && tickets.getImageUris().size() > 0) {
+                if (tickets.getImageUris() != null && !tickets.getImageUris().isEmpty()) {
                     for (String imageUrl : tickets.getImageUris()) {
                         ImageView imageView = new ImageView(context);
+                        assert context != null;
                         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                                 dipToPixels(context, 250),
                                 dipToPixels(context, 400)
@@ -92,10 +97,16 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 AlertDialog dialog = builder.create();
                 Drawable background = ContextCompat.getDrawable(context, R.drawable.redondear_bordes);
-                dialog.getWindow().setBackgroundDrawable(background);
+                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(background);
                 dialog.setView(dialogView);
                 dialog.show();
 
+                botonCerrarDialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
                 botonEditar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -111,25 +122,17 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
-                tickets.setGuardado(!tickets.isGuardado());
-                if (tickets.isGuardado()) {
-                    holder.iconoGuardado.setImageResource(R.drawable.ic_bookmark_guardado);
-                    guardados.add(tickets);
-                } else {
-                    holder.iconoGuardado.setImageResource(R.drawable.ic_bookmark_noguardado);
 
-                }
-                if (tickets.isGuardado()) {
-                    guardados.add(tickets);
-                }
-                notifyDataSetChanged();
+
             }
         });
     }
+
     private int dipToPixels(Context context, float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
+
     @Override
     public int getItemCount() {
         return datos.size();
@@ -143,7 +146,7 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
         return guardados;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView titulo, estado, prioridad;
         CardView cardView;
         ImageView iconoGuardado;
@@ -157,5 +160,9 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
             iconoGuardado = itemView.findViewById(R.id.icono_ticket_guardar);
         }
 
+    }
+
+    public interface OnTicketActionListener {
+        void onTicketGuardado(Ticket ticket, boolean guardado);
     }
 }

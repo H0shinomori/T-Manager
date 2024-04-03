@@ -7,6 +7,8 @@ import android.danyk.Fragmentos.Historial;
 import android.danyk.Fragmentos.Inicio;
 import android.danyk.Fragmentos.Notificaciones;
 import android.danyk.R;
+import android.danyk.Utilidades.ListaAdaptador;
+import android.danyk.modelo.Ticket;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,19 +23,20 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class actividad_menu extends AppCompatActivity {
-    FloatingActionButton boton_ticket;
-    private BottomNavigationView barraNavegacion;
-    private FrameLayout frameLayout;
+import java.util.ArrayList;
+import java.util.List;
+
+public class actividad_menu extends AppCompatActivity implements ListaAdaptador.OnTicketActionListener {
+
+    private List<Ticket> ticketsGuardados;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actividad_menu);
-        frameLayout = findViewById(R.id.frameLayout);
-        barraNavegacion = findViewById(R.id.barraVista);
-        boton_ticket = findViewById(R.id.floatingActionButton);
+        BottomNavigationView barraNavegacion = findViewById(R.id.barraVista);
+        FloatingActionButton boton_ticket = findViewById(R.id.floatingActionButton);
 
         boton_ticket.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +47,7 @@ public class actividad_menu extends AppCompatActivity {
             }
         });
 
+        ticketsGuardados = new ArrayList<>();
         barraNavegacion.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -75,4 +79,15 @@ public class actividad_menu extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void onTicketGuardado(Ticket ticket, boolean guardado) {
+        // Lógica para guardar o eliminar el ticket
+        if (guardado) {
+            // Si el ticket se ha guardado, agrega el ticket a la lista de tickets guardados
+            ticketsGuardados.add(ticket);
+        } else {
+            // Si el ticket se ha desguardado, elimina el ticket de la lista de tickets guardados
+            ticketsGuardados.remove(ticket);
+        }
+    }
 }

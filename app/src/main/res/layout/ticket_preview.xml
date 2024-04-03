@@ -3,21 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="30dp"
     app:cardCornerRadius="20dp"
     app:cardElevation="100dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
         android:background="@color/white"
+        android:orientation="vertical"
         android:padding="16dp">
 
+
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
                 style="@style/fuenteNegrita"
@@ -29,12 +31,21 @@
 
             <TextView
                 android:id="@+id/tituloTextViewPreview"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="2"
                 android:layout_marginLeft="5dp"
                 android:layout_marginBottom="8dp"
                 android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/cerrar_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparente"
+                android:src="@drawable/ic_exitdialog" />
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -87,8 +98,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="120dp"
+            android:scrollbars="none">
 
             <TextView
                 android:id="@+id/descripcionTextViewPreview"
@@ -106,16 +117,16 @@
                 android:id="@+id/layout_vistaPreviaImagen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"/>
+                android:orientation="horizontal" />
         </HorizontalScrollView>
+
         <Button
             android:id="@+id/boton_editarTicket"
+            style="@style/fuenteNegrita"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Editar"
-            style="@style/fuenteNegrita"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:text="Editar" />
     </LinearLayout>
-
 
 </androidx.cardview.widget.CardView>
