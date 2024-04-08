@@ -26,7 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class actividad_menu extends AppCompatActivity implements ListaAdaptador.OnTicketActionListener {
+public class actividad_menu extends AppCompatActivity {
 
     private List<Ticket> ticketsGuardados;
 
@@ -77,17 +77,5 @@ public class actividad_menu extends AppCompatActivity implements ListaAdaptador.
             fragmentTransaction.replace(R.id.frameLayout, fragment);
         }
         fragmentTransaction.commit();
-    }
-
-    @Override
-    public void onTicketGuardado(Ticket ticket, boolean guardado) {
-        // Lógica para guardar o eliminar el ticket
-        if (guardado) {
-            // Si el ticket se ha guardado, agrega el ticket a la lista de tickets guardados
-            ticketsGuardados.add(ticket);
-        } else {
-            // Si el ticket se ha desguardado, elimina el ticket de la lista de tickets guardados
-            ticketsGuardados.remove(ticket);
-        }
     }
 }

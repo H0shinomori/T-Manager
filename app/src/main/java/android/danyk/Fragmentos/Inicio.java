@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -39,6 +38,8 @@ public class Inicio extends Fragment {
     RecyclerView recyclerView;
     ListaAdaptador listaAdaptador;
     DatabaseReference databaseReference;
+    List<String> idsTickets;
+    List<Ticket> guardados;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,7 +51,8 @@ public class Inicio extends Fragment {
         recyclerView = view.findViewById(R.id.recycleView);
         databaseReference = FirebaseDatabase.getInstance().getReference("ticket");
         elementos = new ArrayList<>();
-        listaAdaptador = new ListaAdaptador(elementos, this);
+
+        listaAdaptador = new ListaAdaptador(elementos, this, idsTickets, guardados);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(listaAdaptador);
@@ -97,4 +99,3 @@ public class Inicio extends Fragment {
         return view;
     }
 }
-

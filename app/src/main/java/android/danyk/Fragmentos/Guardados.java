@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 public class Guardados extends Fragment {
+    RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_guardados, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recycleViewGuardados);
+        recyclerView = view.findViewById(R.id.recycleViewGuardados);
 
         return view;
     }
-
 }

@@ -5,8 +5,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.danyk.Actividades.actividad_editarTicket;
+import android.danyk.DAO.TicketDAO;
+import android.danyk.Fragmentos.Inicio;
 import android.danyk.R;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,18 +32,26 @@ import java.util.Objects;
 import android.danyk.modelo.Ticket;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHolder> {
     private List<Ticket> datos;
-    private final List<Ticket> guardados;
     private final LayoutInflater inflater;
     private final Context context;
+    private List<String> idsTickets;
+    private final List<Ticket> guardados;
 
-    public ListaAdaptador(List<Ticket> itemList, Fragment context) {
+
+
+    public void setIdsTickets(List<String> idsTickets) {
+        this.idsTickets = idsTickets;
+    }
+    public ListaAdaptador(List<Ticket> itemList, Fragment context, List<String> idsTickets, List<Ticket> guardados) {
         this.inflater = LayoutInflater.from(context.getContext());
         this.context = context.getContext();
         this.datos = itemList;
-        this.guardados = new ArrayList<>();
+        this.guardados = guardados;
     }
 
     @NonNull
@@ -60,7 +71,6 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // AQUI
                 View dialogView = inflater.inflate(R.layout.ticket_preview, null);
                 TextView tituloPreview = dialogView.findViewById(R.id.tituloTextViewPreview);
                 @SuppressLint({"MissingInflatedId", "LocalSuppress"})
@@ -96,6 +106,7 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 AlertDialog dialog = builder.create();
+                assert context != null;
                 Drawable background = ContextCompat.getDrawable(context, R.drawable.redondear_bordes);
                 Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(background);
                 dialog.setView(dialogView);
@@ -122,8 +133,31 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
+                Ticket ticket = datos.get(position);
+                ticket.setGuardado(!ticket.isGuardado()); // Cambiar el estado guardado del ticket
+                notifyItemChanged(position);
 
+                String ticketId = datos.get(position).getIdTicket();
 
+                // Obtener el usuario actual
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+
+                // Verificar si el usuario está autenticado
+                if (currentUser != null) {
+                    // Obtener el ID del usuario
+                    String userId = currentUser.getUid();
+
+                    // Guardar el ticketId en el campo map del usuario
+                    TicketDAO ticketDAO = new TicketDAO();
+                    ticketDAO.addTicketIdForUser(userId, ticketId);
+
+                    // Imprimir en el log para verificar que se guardó correctamente
+                    Log.d("ListaAdaptador", "ID del ticket guardado para el usuario " + userId + ": " + ticketId);
+                } else {
+                    // El usuario no ha iniciado sesión
+                    Log.e("ListaAdaptador", "El usuario no ha iniciado sesión");
+                }
             }
         });
     }
@@ -142,8 +176,14 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
         datos = items;
     }
 
-    public List<Ticket> getGuardados() {
-        return guardados;
+    public List<Ticket> getTicketsGuardados() {
+        List<Ticket> ticketsGuardados = new ArrayList<>();
+        for (Ticket ticket : datos) {
+            if (ticket.isGuardado()) {
+                ticketsGuardados.add(ticket);
+            }
+        }
+        return ticketsGuardados;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -162,7 +202,4 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
 
     }
 
-    public interface OnTicketActionListener {
-        void onTicketGuardado(Ticket ticket, boolean guardado);
-    }
 }

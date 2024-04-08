@@ -14,26 +14,30 @@ public class Ticket {
     private String prioridad;
     private String descripcion;
     private List<String> imageUris;
-    private boolean guardado;
+    private String idTicket;
 
     public Ticket() {
     }
 
-    public Ticket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris) {
+    public Ticket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris, String idTicket) {
         this.titulo = titulo;
         this.estado = estado;
         this.prioridad = prioridad;
         this.descripcion = descripcion;
         this.imageUris = imageUris;
+        this.idTicket = idTicket;
+
+
     }
 
-    public boolean isGuardado() {
-        return guardado;
+    public String getIdTicket() {
+        return idTicket;
     }
 
-    public void setGuardado(boolean guardado) {
-        this.guardado = guardado;
+    public void setIdTicket(String idTicket) {
+        this.idTicket = idTicket;
     }
+
     public String getTitulo() {
         return titulo;
     }
@@ -72,5 +76,12 @@ public class Ticket {
 
     public void setImageUris(List<String> imageUris) {
         this.imageUris = imageUris;
+    }
+
+    public boolean isGuardado() {
+        return false;
+    }
+
+    public void setGuardado(boolean b) {
     }
 }

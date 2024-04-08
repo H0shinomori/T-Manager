@@ -32,6 +32,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -73,6 +74,7 @@ public class actividad_ticket extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actividad_ticket);
 
+
         linearLayoutVistaPrevia = findViewById(R.id.linear_layout_vista_previa);
         TextView mostrarNombre = findViewById(R.id.creacion_ticket_usuario);
         estado = findViewById(R.id.creacion_ticket_estado);
@@ -104,7 +106,6 @@ public class actividad_ticket extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == PICK_IMAGES_REQUEST && resultCode == RESULT_OK && data != null) {
             if (data.getData() != null) {
                 Uri selectedImageUri = data.getData();
@@ -112,28 +113,11 @@ public class actividad_ticket extends AppCompatActivity {
                 mostrarVistaPrevia();
             }
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Se capturó una imagen desde la cámara
             if (photoFile != null) {
-                // Agregar la URI de la imagen capturada a la lista de URIs
                 Uri photoUri = Uri.fromFile(photoFile);
                 imageUris.add(photoUri);
-
-                // Mostrar la vista previa actualizada
                 mostrarVistaPrevia();
             }
-        }
-    }
-
-    private Bitmap obtenerBitmapDesdeUri(Uri uri) {
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(uri);
-            if (inputStream != null) {
-                return BitmapFactory.decodeStream(inputStream);
-            } else {
-                return null;
-            }
-        } catch (IOException e) {
-            return null;
         }
     }
 

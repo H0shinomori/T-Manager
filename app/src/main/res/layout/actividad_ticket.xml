@@ -27,12 +27,12 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/fuenteNegrita"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="USUARIO:"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
-                    style="@style/fuenteNegrita" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/creacion_ticket_usuario"
@@ -46,13 +46,13 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    style="@style/fuenteNegrita"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:text="Titulo:"
                     android:textColor="@color/black"
-                    android:textSize="18dp"
-                    style="@style/fuenteNegrita" />
+                    android:textSize="18dp" />
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/creacion_ticket_titulo"
@@ -69,14 +69,14 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/fuenteNegrita"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="20dp"
                     android:text="Prioridad:"
                     android:textColor="@color/black"
-                    android:textSize="18dp"
-                    style="@style/fuenteNegrita" />
+                    android:textSize="18dp" />
 
                 <RadioGroup
                     android:id="@+id/creacion_ticket_prioridad"
@@ -110,13 +110,13 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    style="@style/fuenteNegrita"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:text="Estado:"
                     android:textColor="@color/black"
-                    android:textSize="18dp"
-                    style="@style/fuenteNegrita" />
+                    android:textSize="18dp" />
 
                 <TextView
                     android:id="@+id/creacion_ticket_estado"
@@ -127,14 +127,14 @@
             </LinearLayout>
 
             <TextView
+                style="@style/fuenteNegrita"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
                 android:text="Descripcion:"
                 android:textColor="@color/black"
-                android:textSize="18dp"
-                style="@style/fuenteNegrita" />
+                android:textSize="18dp" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/creacion_ticket_descripcion"
@@ -147,12 +147,12 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/boton_adjuntarImagen"
+                style="@style/fuenteNegrita"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Adjuntar imágenes"
                 android:textColor="@android:color/white"
-                style="@style/fuenteNegrita"
                 app:cornerRadius="4dp" />
 
             <ScrollView
@@ -163,7 +163,7 @@
                     android:id="@+id/linear_layout_vista_previa"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"/>
+                    android:orientation="vertical" />
             </ScrollView>
 
 
@@ -174,19 +174,19 @@
 
                 <Button
                     android:id="@+id/creacion_ticket_cancelar"
+                    style="@style/fuenteNegrita"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Cancelar"
-                    style="@style/fuenteNegrita"/>
+                    android:text="Cancelar" />
 
                 <Button
                     android:id="@+id/creacion_ticket_enviar"
+                    style="@style/fuenteNegrita"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Enviar"
-                    style="@style/fuenteNegrita"/>
+                    android:text="Enviar" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
