@@ -8,6 +8,7 @@ import android.danyk.Fragmentos.Inicio;
 import android.danyk.Fragmentos.Notificaciones;
 import android.danyk.R;
 import android.danyk.Utilidades.ListaAdaptador;
+import android.danyk.dbManager.UserDatabaseManager;
 import android.danyk.modelo.Ticket;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -22,6 +23,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +40,9 @@ public class actividad_menu extends AppCompatActivity {
         setContentView(R.layout.actividad_menu);
         BottomNavigationView barraNavegacion = findViewById(R.id.barraVista);
         FloatingActionButton boton_ticket = findViewById(R.id.floatingActionButton);
-
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        UserDatabaseManager.crearUsuarioSiNoExiste(currentUser.getUid());
         boton_ticket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

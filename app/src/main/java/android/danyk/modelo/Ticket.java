@@ -78,10 +78,4 @@ public class Ticket {
         this.imageUris = imageUris;
     }
 
-    public boolean isGuardado() {
-        return false;
-    }
-
-    public void setGuardado(boolean b) {
-    }
 }

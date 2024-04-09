@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.danyk.Actividades.actividad_editarTicket;
 import android.danyk.DAO.TicketDAO;
+import android.danyk.DAO.UserDAO;
 import android.danyk.Fragmentos.Inicio;
 import android.danyk.R;
 import android.graphics.drawable.Drawable;
@@ -134,30 +135,31 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
             @Override
             public void onClick(View v) {
                 Ticket ticket = datos.get(position);
-                ticket.setGuardado(!ticket.isGuardado()); // Cambiar el estado guardado del ticket
                 notifyItemChanged(position);
 
                 String ticketId = datos.get(position).getIdTicket();
 
                 // Obtener el usuario actual
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                FirebaseUser currentUser = mAuth.getCurrentUser();
+                UserDAO userDAO = new UserDAO();
+                String currentUser = userDAO.getUserID();
 
                 // Verificar si el usuario está autenticado
                 if (currentUser != null) {
+
+
                     // Obtener el ID del usuario
-                    String userId = currentUser.getUid();
 
                     // Guardar el ticketId en el campo map del usuario
                     TicketDAO ticketDAO = new TicketDAO();
-                    ticketDAO.addTicketIdForUser(userId, ticketId);
+                    ticketDAO.agregarTicketGuardado(currentUser, ticketId);
 
                     // Imprimir en el log para verificar que se guardó correctamente
-                    Log.d("ListaAdaptador", "ID del ticket guardado para el usuario " + userId + ": " + ticketId);
+
                 } else {
                     // El usuario no ha iniciado sesión
                     Log.e("ListaAdaptador", "El usuario no ha iniciado sesión");
                 }
+
             }
         });
     }
@@ -172,19 +174,7 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
         return datos.size();
     }
 
-    public void setItems(List<Ticket> items) {
-        datos = items;
-    }
 
-    public List<Ticket> getTicketsGuardados() {
-        List<Ticket> ticketsGuardados = new ArrayList<>();
-        for (Ticket ticket : datos) {
-            if (ticket.isGuardado()) {
-                ticketsGuardados.add(ticket);
-            }
-        }
-        return ticketsGuardados;
-    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView titulo, estado, prioridad;

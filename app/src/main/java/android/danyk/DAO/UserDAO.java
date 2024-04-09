@@ -36,6 +36,12 @@ public class UserDAO {
         return null;
     }
 
+    public String getUserID(){
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String userId = currentUser.getUid();
+        return userId;
+    }
+
     public Boolean checkCurrentUser(){
         if (mAuth.getCurrentUser() != null){
             return true;
