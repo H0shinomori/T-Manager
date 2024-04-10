@@ -18,9 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import android.danyk.R;
 import android.danyk.dbManager.FirebaseSingleton;
 import android.danyk.modelo.Ticket;
 import android.util.Log;
+import android.widget.ImageView;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -41,7 +43,7 @@ public class TicketDAO {
         databaseReference.child("ticket").child(id).setValue(ticket).addOnCompleteListener(onCompleteListener);
     }
 
-    public static void agregarTicketGuardado(String usuarioId, String ticketId) {
+    public static void agregarTicketGuardado(String usuarioId, String ticketId, ImageView imageView) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usuarioRef = database.getReference().child("usuarios").child(usuarioId);
 
@@ -76,6 +78,39 @@ public class TicketDAO {
             }
         });
     }
+
+    public static void buscarTicketGuardado(String usuarioId, String ticketId, final OnTicketGuardadoCallback callback) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usuarioRef = database.getReference().child("usuarios").child(usuarioId).child("idsGuardados");
+
+        usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean encontrado = false;
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot idSnapshot : dataSnapshot.getChildren()) {
+                        String idGuardado = idSnapshot.getValue(String.class);
+                        if (idGuardado != null && idGuardado.equals(ticketId)) {
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                }
+                callback.onTicketGuardado(encontrado);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onTicketGuardado(false); // En caso de error, devolver false
+            }
+        });
+    }
+
+    // Definición de la interfaz de callback
+    public interface OnTicketGuardadoCallback {
+        void onTicketGuardado(boolean ticketGuardado);
+    }
+
 
 
     public static String generateRandomId() {

@@ -69,6 +69,18 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
         holder.titulo.setText(tickets.getTitulo());
         holder.estado.setText(tickets.getEstado());
         holder.prioridad.setText(tickets.getPrioridad());
+        UserDAO userDAO = new UserDAO();
+        String currentUser = userDAO.getUserID();
+        TicketDAO.buscarTicketGuardado(currentUser, tickets.getIdTicket(), new TicketDAO.OnTicketGuardadoCallback() {
+            @Override
+            public void onTicketGuardado(boolean ticketGuardado) {
+                if (ticketGuardado) {
+                    holder.iconoGuardado.setImageResource(R.drawable.ic_bookmark_guardado);
+                } else {
+                    holder.iconoGuardado.setImageResource(R.drawable.ic_bookmark_noguardado);
+                }
+            }
+        });
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +146,7 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
+
                 Ticket ticket = datos.get(position);
                 notifyItemChanged(position);
 
@@ -145,13 +158,9 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
 
                 // Verificar si el usuario está autenticado
                 if (currentUser != null) {
-
-
-                    // Obtener el ID del usuario
-
                     // Guardar el ticketId en el campo map del usuario
                     TicketDAO ticketDAO = new TicketDAO();
-                    ticketDAO.agregarTicketGuardado(currentUser, ticketId);
+                    ticketDAO.agregarTicketGuardado(currentUser, ticketId,holder.iconoGuardado);
 
                     // Imprimir en el log para verificar que se guardó correctamente
 
@@ -188,6 +197,7 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
             prioridad = itemView.findViewById(R.id.ticket_prioridad);
             cardView = itemView.findViewById(R.id.cardViewTicket);
             iconoGuardado = itemView.findViewById(R.id.icono_ticket_guardar);
+            iconoGuardado.setImageResource(R.drawable.ic_bookmark_noguardado);
         }
 
     }

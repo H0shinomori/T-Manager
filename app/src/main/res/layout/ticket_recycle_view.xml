@@ -118,8 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="6dp"
-                android:layout_marginEnd="8dp"
-                app:srcCompat="@drawable/ic_bookmark_noguardado" />
+                android:layout_marginEnd="8dp" />
         </RelativeLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
