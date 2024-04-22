@@ -1,14 +1,15 @@
 package android.danyk.modelo;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @IgnoreExtraProperties
-public class Ticket {
+public class Ticket implements Parcelable {
     private String titulo;
     private String estado;
     private String prioridad;
@@ -26,8 +27,30 @@ public class Ticket {
         this.descripcion = descripcion;
         this.imageUris = imageUris;
         this.idTicket = idTicket;
+    }
 
+    protected Ticket(Parcel in) {
+        titulo = in.readString();
+        estado = in.readString();
+        prioridad = in.readString();
+        descripcion = in.readString();
+        imageUris = in.createStringArrayList();
+        idTicket = in.readString();
+    }
 
+    public static final Creator<Ticket> CREATOR = new Creator<Ticket>() {
+        @Override
+        public Ticket createFromParcel(Parcel in) {
+            return new Ticket(in);
+        }
+
+        @Override
+        public Ticket[] newArray(int size) {
+            return new Ticket[size];
+        }
+    };
+
+    public Ticket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUrls, String s, String notas) {
     }
 
     public String getIdTicket() {
@@ -78,4 +101,18 @@ public class Ticket {
         this.imageUris = imageUris;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(titulo);
+        dest.writeString(estado);
+        dest.writeString(prioridad);
+        dest.writeString(descripcion);
+        dest.writeStringList(imageUris);
+        dest.writeString(idTicket);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 }

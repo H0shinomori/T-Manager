@@ -16,14 +16,14 @@
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:title="" />
+        android:title="TODO" />
 
     <item
-        android:id="@+id/navNotificaciones"
+        android:id="@+id/navMistickets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:icon="@drawable/ic_notificacion"
-        android:title="Notificaciones" />
+        android:icon="@drawable/ic_mistickets"
+        android:title="Mis Tickets" />
     <item
         android:id="@+id/navHistorial"
         android:layout_width="wrap_content"

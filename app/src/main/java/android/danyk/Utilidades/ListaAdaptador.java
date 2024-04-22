@@ -131,7 +131,9 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
                     botonEditar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Ticket ticket = datos.get(position);
                             Intent intent = new Intent(context, actividad_editarTicket.class);
+                            intent.putExtra("ticket", ticket);
                             context.startActivity(intent);
                         }
                     });

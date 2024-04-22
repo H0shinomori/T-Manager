@@ -27,6 +27,7 @@
             android:id="@+id/barraVista"
             android:layout_marginEnd="18dp"
             app:labelVisibilityMode="selected"
+            app:itemBackground="@drawable/selector_no_selected"
             app:itemIconTint="@color/color_navegacion_iconos"
             app:itemTextColor="@color/color_navegacion_iconos"
             android:background="@android:color/transparent"

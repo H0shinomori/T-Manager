@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo_actividades"
-    tools:context=".Fragmentos.Inicio">
+    tools:context=".Fragmentos.Inicio_2">
 
+    <!-- Encabezado -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -22,7 +22,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
-                android:layout_marginLeft="10dp"
                 tools:ignore="MissingConstraints">
 
                 <TextView
@@ -45,27 +44,13 @@
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
-
-                <ImageButton
-                    android:id="@+id/miPerfil"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="15dp"
-
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_perfil"
-                    app:tint="@color/white" />
-
                 <ImageButton
                     android:id="@+id/cerrar_sesion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="20dp"
-                    android:layout_toStartOf="@id/miPerfil"
+                    android:layout_marginEnd="10dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_cerraresion"
@@ -80,15 +65,13 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@+id/relativelayout"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="0dp">
+                tools:ignore="MissingConstraints">
 
                 <TextView
                     android:id="@+id/day_of_week_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-
                     android:textSize="12sp"
                     android:textStyle="bold"
                     tools:text="Lunes" />
@@ -101,11 +84,11 @@
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     tools:text="10 de abril de 2024" />
-
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
+    <!-- Tarjetas -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -113,14 +96,72 @@
         android:background="@drawable/background_cardview"
         android:layout_marginTop="100dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycleView"
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="20dp"
-            android:layout_marginBottom="70dp"/>
+            android:columnCount="2"
+            android:orientation="vertical"
+            android:rowCount="2"
+            android:padding="16dp">
+
+            <!-- Tarjeta 1 -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <!-- Contenido de la tarjeta 1 -->
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Tarjeta 2 -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <!-- Contenido de la tarjeta 2 -->
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Tarjeta 3 -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <!-- Contenido de la tarjeta 3 -->
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Tarjeta 4 -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <!-- Contenido de la tarjeta 4 -->
+
+            </androidx.cardview.widget.CardView>
+
+        </GridLayout>
 
     </LinearLayout>
-
 
 </FrameLayout>
