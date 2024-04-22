@@ -44,9 +44,6 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
     private final Context context;
     private List<String> idsTickets;
     private final List<Ticket> guardados;
-
-
-
     public void setIdsTickets(List<String> idsTickets) {
         this.idsTickets = idsTickets;
     }
@@ -71,26 +68,22 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
         Ticket tickets = datos.get(position);
         String ticketId = tickets.getIdTicket();
 
-
-
         if (!idsTickets.contains(ticketId)){
             holder.titulo.setText(tickets.getTitulo());
             holder.estado.setText(tickets.getEstado());
             holder.prioridad.setText(tickets.getPrioridad());
             holder.iconoGuardado.setImageResource(R.drawable.ic_bookmark_noguardado);
             holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint({"MissingInflatedId", "LocalSuppress"})
                 @Override
                 public void onClick(View v) {
                     View dialogView = inflater.inflate(R.layout.ticket_preview, null);
                     TextView tituloPreview = dialogView.findViewById(R.id.tituloTextViewPreview);
-                    @SuppressLint({"MissingInflatedId", "LocalSuppress"})
                     TextView estadoPreview = dialogView.findViewById(R.id.estadoTextViewPreview);
                     TextView prioridadPreview = dialogView.findViewById(R.id.prioridadTextViewPreview);
                     TextView descripcionPreview = dialogView.findViewById(R.id.descripcionTextViewPreview);
                     LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
-                    @SuppressLint({"MissingInflatedId", "LocalSuppress"})
                     Button botonEditar = dialogView.findViewById(R.id.boton_editarTicket);
-                    @SuppressLint({"MissingInflatedId", "LocalSuppress"})
                     ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
 
                     tituloPreview.setText(tickets.getTitulo());

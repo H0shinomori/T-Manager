@@ -5,9 +5,14 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.danyk.R;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,11 +33,16 @@ import java.util.Map;
 
 public class actividad_registro extends AppCompatActivity {
     TextInputEditText nombre, apellido, email, contra;
+    RadioButton rolUsuario, rolTecnico;
     Button boton_registro;
     FirebaseAuth mAuth;
     FirebaseFirestore firestore;
+    TextInputEditText tecnicoContra;
 
-    @SuppressLint({"WrongViewCast", "MissingInflatedId"})
+    private static final String CONTRASEÑA_TECNICO = "tecnico";
+
+    private boolean contraseñaCorrecta = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +60,44 @@ public class actividad_registro extends AppCompatActivity {
             return;
         }
 
+        tecnicoContra = findViewById(R.id.tecnico_contra);
         nombre = findViewById(R.id.nombre_registro);
         apellido = findViewById(R.id.apellido_registro);
         email = findViewById(R.id.email_registro);
         contra = findViewById(R.id.contra_registro);
         boton_registro = findViewById(R.id.boton_registroCompleto);
+        rolTecnico = findViewById(R.id.rol_tecnico);
+        rolUsuario = findViewById(R.id.rol_usuario);
+
+        RadioGroup rolRadioGroup = findViewById(R.id.rol_radio_group);
+
+        rolRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.rol_tecnico) {
+                    tecnicoContra.setVisibility(View.VISIBLE);
+                } else {
+                    tecnicoContra.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        tecnicoContra.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().equals(CONTRASEÑA_TECNICO)) {
+                    contraseñaCorrecta = true;
+                } else {
+                    contraseñaCorrecta = false;
+                }
+            }
+        });
 
         boton_registro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +108,23 @@ public class actividad_registro extends AppCompatActivity {
                 name = String.valueOf(nombre.getText());
                 lastName = String.valueOf(apellido.getText());
 
+                if (tecnicoContra.getVisibility() == View.VISIBLE && !contraseñaCorrecta) {
+                    Toast.makeText(actividad_registro.this, "Por favor, ingrese la contraseña del técnico", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (TextUtils.isEmpty(mail) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name) || TextUtils.isEmpty(lastName)) {
                     Toast.makeText(actividad_registro.this, "Complete todos los campos", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                final String rol;
+                if (rolTecnico.isChecked()) {
+                    rol = "Tecnico";
+                } else if (rolUsuario.isChecked()) {
+                    rol = "Usuario";
+                } else {
+                    Toast.makeText(actividad_registro.this, "Seleccione un rol", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -88,10 +146,12 @@ public class actividad_registro extends AppCompatActivity {
                                         userData.put("apellido", lastName);
                                         userData.put("email", mail);
                                         userData.put("contra", password);
+                                        userData.put("rol", rol);
 
                                         firestore.collection("usuarios").document(userId).set(userData);
                                         Intent intent = new Intent(actividad_registro.this, actividad_menu.class);
                                         overridePendingTransition(R.anim.aparecer_transicion, R.anim.desaparecer_transicion);
+                                        intent.putExtra("ROL_USUARIO", rol);
                                         startActivity(intent);
                                     } else {
                                         Toast.makeText(actividad_registro.this, "Error", Toast.LENGTH_SHORT).show();

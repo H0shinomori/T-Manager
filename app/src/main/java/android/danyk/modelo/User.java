@@ -1,7 +1,7 @@
 package android.danyk.modelo;
 
 public class User {
-    private String nombre, apellido, correo, contrasena;
+    private String nombre, apellido, correo, contrasena, rol;
 
     public User(){
 
@@ -11,11 +11,12 @@ public class User {
         this.nombre = nombre;
     }
 
-    public User(String nombre, String apellido, String correo, String contrasena) {
+    public User(String nombre, String apellido, String correo, String contrasena, String rol) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
         this.contrasena = contrasena;
+        this.rol = rol;
     }
 
     public String getNombre() {
@@ -48,5 +49,13 @@ public class User {
 
     public void setContrasena(String contrasena) {
         this.contrasena = contrasena;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 }

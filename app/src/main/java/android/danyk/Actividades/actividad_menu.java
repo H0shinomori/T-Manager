@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,17 +27,23 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
 public class actividad_menu extends AppCompatActivity {
+
+    private String rolUsuario;
+    private BottomNavigationView barraNavegacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actividad_menu);
 
-        BottomNavigationView barraNavegacion = findViewById(R.id.barraVista);
+        barraNavegacion = findViewById(R.id.barraVista);
         FloatingActionButton boton_ticket = findViewById(R.id.floatingActionButton);
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = auth.getCurrentUser();
@@ -46,19 +53,8 @@ public class actividad_menu extends AppCompatActivity {
             startActivity(new Intent(this, actividad_login.class));
             return;
         }
-
-        SharedPreferences sharedPreferences = getSharedPreferences("DominioPrefs", Context.MODE_PRIVATE);
         UserDatabaseManager.crearUsuarioSiNoExiste(currentUser.getUid());
-
-        String dominio = sharedPreferences.getString("dominio", "");
-        dominio = dominio.trim();
-        if (dominio.equals("inf.ceac.com")) {
-            cargarFragmento(new Inicio(), true);
-        } else if (dominio.equals("ceac.com")) {
-            cargarFragmento(new Inicio_2(), true);
-        }
-
-
+        obtenerRolUsuarioDesdeBaseDeDatos();
 
         boton_ticket.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,32 +69,61 @@ public class actividad_menu extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemID = item.getItemId();
                 if (itemID == R.id.navInicio) {
-                    String dominio = sharedPreferences.getString("dominio", "");
-                    dominio = dominio.trim();
-                    if (dominio.equals("inf.ceac.com")) {
-                        cargarFragmento(new Inicio(), false);
-                    } else if (dominio.equals("ceac.com")) {
-                        cargarFragmento(new Inicio_2(), false);
+                    if (rolUsuario != null) {
+                        if (rolUsuario.equals("Tecnico")) {
+                            cargarFragmento(new Inicio(), false);
+                        } else if (rolUsuario.equals("Usuario")) {
+                            cargarFragmento(new Inicio_2(), false);
+                        }
                     }
                 } else if (itemID == R.id.navGuardados) {
                     cargarFragmento(new Guardados(), false);
                 } else if (itemID == R.id.navMistickets) {
                     cargarFragmento(new MisTickets(), false);
                 } else if (itemID == R.id.navHistorial) {
-                    String dominio = sharedPreferences.getString("dominio", "");
-                    dominio = dominio.trim();
-                    if (dominio.equals("inf.ceac.com")) {
-                        cargarFragmento(new Historial(), false);
-                    } else if (dominio.equals("ceac.com")) {
-                        cargarFragmento(new Perfil(), false);
+                    if (rolUsuario != null) {
+                        if (rolUsuario.equals("Tecnico")) {
+                            cargarFragmento(new Historial(), false);
+                        } else if (rolUsuario.equals("Usuario")) {
+                            cargarFragmento(new Perfil(), false);
+                        }
                     }
                 }
                 return true;
             }
         });
-        if (Objects.requireNonNull(currentUser.getEmail()).endsWith("@ceac.com")) {
-            cambiarIconoPerfilEnHistorial(barraNavegacion.getMenu());
-            cambiarTextoPerfilEnHistorial(barraNavegacion.getMenu());
+    }
+
+    private void obtenerRolUsuarioDesdeBaseDeDatos() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        String userId = currentUser.getUid();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference userRef = db.collection("usuarios").document(userId);
+
+        userRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    rolUsuario = document.getString("rol");
+                    cargarFragmentoSegunRol();
+                    cambiarIconoPerfil();
+                    cambiarTextoPerfil();
+                } else {
+                    Toast.makeText(actividad_menu.this, "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void cargarFragmentoSegunRol() {
+        if (rolUsuario != null) {
+            if (rolUsuario.equals("Tecnico")) {
+                cargarFragmento(new Inicio(), true);
+            } else if (rolUsuario.equals("Usuario")) {
+                cargarFragmento(new Inicio_2(), true);
+            }
         }
     }
 
@@ -113,13 +138,17 @@ public class actividad_menu extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-
-    private void cambiarIconoPerfilEnHistorial(Menu menu) {
-        MenuItem historialItem = menu.findItem(R.id.navHistorial);
-        historialItem.setIcon(R.drawable.ic_perfil2);
+    private void cambiarIconoPerfil() {
+        if (rolUsuario != null && rolUsuario.equals("Usuario")) {
+            MenuItem historialItem = barraNavegacion.getMenu().findItem(R.id.navHistorial);
+            historialItem.setIcon(R.drawable.ic_perfil2);
+        }
     }
-    private void cambiarTextoPerfilEnHistorial(Menu menu) {
-        MenuItem historialItem = menu.findItem(R.id.navHistorial);
-        historialItem.setTitle("Mi Perfil");
+
+    private void cambiarTextoPerfil() {
+        if (rolUsuario != null && rolUsuario.equals("Usuario")) {
+            MenuItem historialItem = barraNavegacion.getMenu().findItem(R.id.navHistorial);
+            historialItem.setTitle("Mi Perfil");
+        }
     }
 }

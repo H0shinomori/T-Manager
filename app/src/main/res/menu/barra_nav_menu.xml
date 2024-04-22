@@ -16,7 +16,8 @@
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:title="TODO" />
+        android:clickable="false"
+        android:title="" />
 
     <item
         android:id="@+id/navMistickets"

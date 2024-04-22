@@ -4,15 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondo_actividades"
+    android:orientation="vertical"
     tools:context=".Fragmentos.Guardados">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleViewGuardados"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@drawable/background_cardview1"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/fuenteNegrita"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tickets Guardados"
+            android:textColor="@color/white"
+            android:textSize="30dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="90dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="90dp" />
+        android:layout_marginTop="70dp"
+        android:background="@drawable/background_cardview"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleViewGuardados"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 
 </FrameLayout>

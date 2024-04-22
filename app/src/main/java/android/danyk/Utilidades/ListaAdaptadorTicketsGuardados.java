@@ -59,18 +59,17 @@ public class ListaAdaptadorTicketsGuardados extends RecyclerView.Adapter<ListaAd
             holder.estado.setText(ticket.getEstado());
             holder.prioridad.setText(ticket.getPrioridad());
             holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint({"MissingInflatedId", "LocalSuppress"})
+
                 @Override
                 public void onClick(View v) {
                     View dialogView = inflater.inflate(R.layout.ticket_preview, null);
                     TextView tituloPreview = dialogView.findViewById(R.id.tituloTextViewPreview);
-                    @SuppressLint({"MissingInflatedId", "LocalSuppress"})
                     TextView estadoPreview = dialogView.findViewById(R.id.estadoTextViewPreview);
                     TextView prioridadPreview = dialogView.findViewById(R.id.prioridadTextViewPreview);
                     TextView descripcionPreview = dialogView.findViewById(R.id.descripcionTextViewPreview);
                     LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
-                    @SuppressLint({"MissingInflatedId", "LocalSuppress"})
                     Button botonEditar = dialogView.findViewById(R.id.boton_editarTicket);
-                    @SuppressLint({"MissingInflatedId", "LocalSuppress"})
                     ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
 
                     tituloPreview.setText(ticket.getTitulo());

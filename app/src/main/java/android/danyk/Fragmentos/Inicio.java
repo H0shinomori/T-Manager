@@ -1,20 +1,24 @@
 package android.danyk.Fragmentos;
 
 import android.annotation.SuppressLint;
-import android.danyk.Utilidades.ListaAdaptador;
+import android.danyk.DAO.UserDAO;
 import android.danyk.R;
+import android.danyk.Utilidades.ListaAdaptador;
+import android.danyk.modelo.Ticket;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,16 +28,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-
-import android.danyk.DAO.UserDAO;
-import android.danyk.modelo.Ticket;
+import java.util.Locale;
 
 public class Inicio extends Fragment {
-    ImageButton boton_cerrar_sesion;
+    ImageButton botonPerfil;
+    Button boton_cerrar_sesion;
     FirebaseAuth mAuth;
-    TextView mostrarNombre;
+    TextView mostrarNombre, dayOfWeekTextView, dateTextView;
     List<Ticket> elementos;
     RecyclerView recyclerView;
     ListaAdaptador listaAdaptador;
@@ -42,12 +47,15 @@ public class Inicio extends Fragment {
     List<Ticket> guardados;
     List<String> idsTicketsGuardados;
     UserDAO userDAO;
+    DrawerLayout drawerLayout;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inicio, container, false);
 
-        boton_cerrar_sesion = view.findViewById(R.id.cerrar_sesion);
+        botonPerfil = view.findViewById(R.id.miPerfil);
+        boton_cerrar_sesion = view.findViewById(R.id.cerrar_sesionDrawer);
         mostrarNombre = view.findViewById(R.id.nombre_usuario);
         mAuth = FirebaseAuth.getInstance();
         recyclerView = view.findViewById(R.id.recycleView);
@@ -60,6 +68,32 @@ public class Inicio extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(listaAdaptador);
+        dayOfWeekTextView = view.findViewById(R.id.day_of_week_textview);
+        dateTextView = view.findViewById(R.id.date_textview);
+
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE", Locale.getDefault());
+        String dayOfWeek = dateFormat.format(calendar.getTime());
+        dateFormat = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale.getDefault());
+        String date = dateFormat.format(calendar.getTime());
+        dayOfWeekTextView.setText(dayOfWeek.toUpperCase(Locale.getDefault()));
+        dateTextView.setText(date);
+
+        botonPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = getActivity().findViewById(R.id.drawer_layout);
+                if (drawerLayout != null) {
+                    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                    } else {
+                        drawerLayout.openDrawer(GravityCompat.START);
+                    }
+                }
+            }
+        });
+
 
         databaseReference = FirebaseDatabase.getInstance().getReference("usuarios").child(userDAO.getUserID()).child("idsGuardados");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -70,7 +104,6 @@ public class Inicio extends Fragment {
                     String idTicket = dt.getValue(String.class);
                     idsTicketsGuardados.add(idTicket);
                 }
-                // Actualizar la lista de tickets guardados
                 actualizarTicketsInicio();
             }
 
@@ -97,8 +130,8 @@ public class Inicio extends Fragment {
         return view;
     }
 
+
     private void actualizarTicketsInicio() {
-        // Obtener todos los tickets de la base de datos
         DatabaseReference ticketsReference = FirebaseDatabase.getInstance().getReference("ticket");
         ticketsReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -106,7 +139,6 @@ public class Inicio extends Fragment {
                 elementos.clear();
                 for (DataSnapshot dt : snapshot.getChildren()) {
                     Ticket ticket = dt.getValue(Ticket.class);
-                    // Filtrar los tickets para excluir aquellos cuyos IDs están en la lista de tickets guardados
                     if (!idsTicketsGuardados.contains(ticket.getIdTicket())) {
                         elementos.add(ticket);
                     }

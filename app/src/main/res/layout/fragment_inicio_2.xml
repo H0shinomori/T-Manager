@@ -107,7 +107,7 @@
             <!-- Tarjeta 1 -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
-                android:layout_height="250dp"
+                android:layout_height="270dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 app:cardCornerRadius="8dp"
@@ -121,7 +121,7 @@
             <!-- Tarjeta 2 -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
-                android:layout_height="250dp"
+                android:layout_height="270dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 app:cardCornerRadius="8dp"
@@ -135,7 +135,7 @@
             <!-- Tarjeta 3 -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
-                android:layout_height="250dp"
+                android:layout_height="270dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 app:cardCornerRadius="8dp"
@@ -149,7 +149,7 @@
             <!-- Tarjeta 4 -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
-                android:layout_height="250dp"
+                android:layout_height="270dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
                 app:cardCornerRadius="8dp"

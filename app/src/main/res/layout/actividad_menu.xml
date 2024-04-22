@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/bottomAppBar"
         android:layout_gravity="bottom"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="#1a2242"
         app:fabCradleMargin="10dp"
         app:fabCradleRoundedCornerRadius="50dp">
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -40,12 +40,12 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:src="@drawable/ticket_logo"
+        android:backgroundTint="#1a2242"
+        android:src="@drawable/ticket_logo3"
         app:layout_anchor="@id/bottomAppBar"
         app:borderWidth="0dp"
         app:maxImageSize="30dp"
-        app:tint="@color/azulito" />
+        app:tint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
