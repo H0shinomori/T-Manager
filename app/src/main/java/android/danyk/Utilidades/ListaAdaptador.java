@@ -77,6 +77,7 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
             holder.titulo.setText(tickets.getTitulo());
             holder.estado.setText(tickets.getEstado());
             holder.prioridad.setText(tickets.getPrioridad());
+            holder.iconoGuardado.setImageResource(R.drawable.ic_bookmark_noguardado);
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
