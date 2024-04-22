@@ -40,6 +40,8 @@ public class Inicio extends Fragment {
     DatabaseReference databaseReference;
     List<String> idsTickets;
     List<Ticket> guardados;
+    List<String> idsTicketsGuardados;
+    UserDAO userDAO;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,29 +53,25 @@ public class Inicio extends Fragment {
         recyclerView = view.findViewById(R.id.recycleView);
         databaseReference = FirebaseDatabase.getInstance().getReference("ticket");
         elementos = new ArrayList<>();
-
+        idsTickets = new ArrayList<>();
+        idsTicketsGuardados = new ArrayList<>();
+        userDAO = new UserDAO();
         listaAdaptador = new ListaAdaptador(elementos, this, idsTickets, guardados);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(listaAdaptador);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference("usuarios").child(userDAO.getUserID()).child("idsGuardados");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                elementos.clear();
+                idsTicketsGuardados.clear();
                 for (DataSnapshot dt : snapshot.getChildren()) {
-                    Ticket ticket = dt.getValue(Ticket.class);
-                    elementos.add(ticket);
+                    String idTicket = dt.getValue(String.class);
+                    idsTicketsGuardados.add(idTicket);
                 }
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @SuppressLint("NotifyDataSetChanged")
-                        @Override
-                        public void run() {
-                            listaAdaptador.notifyDataSetChanged();
-                        }
-                    });
-                }
+                // Actualizar la lista de tickets guardados
+                actualizarTicketsInicio();
             }
 
             @Override
@@ -97,5 +95,28 @@ public class Inicio extends Fragment {
             });
         }
         return view;
+    }
+
+    private void actualizarTicketsInicio() {
+        // Obtener todos los tickets de la base de datos
+        DatabaseReference ticketsReference = FirebaseDatabase.getInstance().getReference("ticket");
+        ticketsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                elementos.clear();
+                for (DataSnapshot dt : snapshot.getChildren()) {
+                    Ticket ticket = dt.getValue(Ticket.class);
+                    // Filtrar los tickets para excluir aquellos cuyos IDs están en la lista de tickets guardados
+                    if (!idsTicketsGuardados.contains(ticket.getIdTicket())) {
+                        elementos.add(ticket);
+                    }
+                }
+                listaAdaptador.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 }

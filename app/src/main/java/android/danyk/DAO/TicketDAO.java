@@ -18,11 +18,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import android.danyk.R;
 import android.danyk.dbManager.FirebaseSingleton;
 import android.danyk.modelo.Ticket;
 import android.util.Log;
+import android.widget.ImageView;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import androidx.annotation.NonNull;
 
 public class TicketDAO {
     private final DatabaseReference databaseReference;
@@ -41,7 +43,7 @@ public class TicketDAO {
         databaseReference.child("ticket").child(id).setValue(ticket).addOnCompleteListener(onCompleteListener);
     }
 
-    public static void agregarTicketGuardado(String usuarioId, String ticketId) {
+    public void agregarTicketGuardado(String usuarioId, String ticketId) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usuarioRef = database.getReference().child("usuarios").child(usuarioId);
 
@@ -77,7 +79,55 @@ public class TicketDAO {
         });
     }
 
+    public void eliminarTicketGuardado(String usuarioId, String ticketId) {
+        DatabaseReference usuarioRef = databaseReference.child("usuarios").child(usuarioId);
 
+        usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Obtener la lista de idsGuardados del usuario
+                    List<String> idsGuardados = new ArrayList<>();
+                    DataSnapshot idsGuardadosSnapshot = dataSnapshot.child("idsGuardados");
+                    for (DataSnapshot childSnapshot : idsGuardadosSnapshot.getChildren()) {
+                        String idGuardado = childSnapshot.getValue(String.class);
+                        if (!idGuardado.equals(ticketId)) {
+                            // Agregar todos los idsGuardados excepto el que se va a eliminar
+                            idsGuardados.add(idGuardado);
+                        }
+                    }
+
+                    // Actualizar la lista de idsGuardados del usuario
+                    usuarioRef.child("idsGuardados").setValue(idsGuardados);
+                } else {
+                    // El usuario no existe en la base de datos
+                    // Manejar según sea necesario
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Manejar error
+            }
+        });
+    }
+
+
+    public void obtenerTicketPorId(String ticketId, ValueEventListener valueEventListener) {
+        DatabaseReference ticketRef = databaseReference.child("ticket").child(ticketId);
+        ticketRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                valueEventListener.onDataChange(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Manejar error
+                valueEventListener.onCancelled(databaseError);
+            }
+        });
+    }
     public static String generateRandomId() {
         UUID uuid = UUID.randomUUID();
         return uuid.toString();
