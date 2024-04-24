@@ -41,6 +41,9 @@ public class TicketDAO {
         String id = databaseReference.child("ticket").push().getKey();
         assert id != null;
         databaseReference.child("ticket").child(id).setValue(ticket).addOnCompleteListener(onCompleteListener);
+        TicketDAO ticketDAO = new TicketDAO();
+        UserDAO userDAO = new UserDAO();
+        ticketDAO.agregarMiTicket(userDAO.getUserID(),idTicket);
     }
 
     public void agregarTicketGuardado(String usuarioId, String ticketId) {
@@ -99,6 +102,42 @@ public class TicketDAO {
 
                     // Actualizar la lista de idsGuardados del usuario
                     usuarioRef.child("idsGuardados").setValue(idsGuardados);
+                } else {
+                    // El usuario no existe en la base de datos
+                    // Manejar según sea necesario
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Manejar error
+            }
+        });
+    }
+
+    public void agregarMiTicket(String usuarioId, String ticketId) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usuarioRef = database.getReference().child("usuarios").child(usuarioId);
+
+        // Verificar si el usuario existe en la base de datos
+        usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // El usuario existe, obtener la lista de idsGuardados
+                    List<String> idsGuardados = new ArrayList<>();
+                    DataSnapshot idsGuardadosSnapshot = dataSnapshot.child("idsCreados");
+                    for (DataSnapshot childSnapshot : idsGuardadosSnapshot.getChildren()) {
+                        String idGuardado = childSnapshot.getValue(String.class);
+                        idsGuardados.add(idGuardado);
+                    }
+
+                    // Verificar si el ticket ya está guardado
+                    if (!idsGuardados.contains(ticketId)) {
+                        // El ticket no está guardado, agregarlo a la lista
+                        idsGuardados.add(ticketId);
+                        usuarioRef.child("idsCreados").setValue(idsGuardados);
+                    }
                 } else {
                     // El usuario no existe en la base de datos
                     // Manejar según sea necesario

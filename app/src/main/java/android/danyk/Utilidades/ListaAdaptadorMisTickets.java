@@ -29,32 +29,32 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 import java.util.Objects;
 
-public class ListaAdaptadorTicketsGuardados extends RecyclerView.Adapter<ListaAdaptadorTicketsGuardados.ViewHolder> {
+public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptadorMisTickets.ViewHolder> {
     private List<Ticket> datos;
     private final LayoutInflater inflater;
     private final Context context;
-    private final List<String> idsTicketsGuardados;
+    private final List<String> idsMisTickets;
 
-    public ListaAdaptadorTicketsGuardados(List<Ticket> itemList, Context context, List<String> idsTicketsGuardados) {
+    public ListaAdaptadorMisTickets(List<Ticket> itemList, Context context, List<String> idsMisTickets) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.datos = itemList;
-        this.idsTicketsGuardados = idsTicketsGuardados;
+        this.idsMisTickets = idsMisTickets;
     }
 
     @NonNull
     @Override
-    public ListaAdaptadorTicketsGuardados.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ListaAdaptadorMisTickets.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = inflater.inflate(R.layout.ticket_recycle_view, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ListaAdaptadorTicketsGuardados.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+    public void onBindViewHolder(@NonNull ListaAdaptadorMisTickets.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Ticket ticket = datos.get(position);
 
         // Verificar si el ticket está guardado por el usuario
-        if (idsTicketsGuardados.contains(ticket.getIdTicket())) {
+        if (idsMisTickets.contains(ticket.getIdTicket())) {
             holder.titulo.setText(ticket.getTitulo());
             holder.estado.setText(ticket.getEstado());
             holder.prioridad.setText(ticket.getPrioridad());
@@ -107,28 +107,13 @@ public class ListaAdaptadorTicketsGuardados extends RecyclerView.Adapter<ListaAd
                             dialog.dismiss();
                         }
                     });
-                    botonEditar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(context, actividad_editarTicket.class);
-                            context.startActivity(intent);
-                        }
-                    });
                 }
             });
-            holder.iconoGuardado.setImageResource(R.drawable.ic_bookmark_guardado);
+            holder.iconoGuardado.setImageResource(R.drawable.eliminar_ticket);
             holder.iconoGuardado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Ticket ticket = datos.get(position);
-                    notifyItemChanged(position);
-
-                    // Obtener el usuario actual
-                    UserDAO userDAO = new UserDAO();
-                    String currentUser = userDAO.getUserID();
-                    TicketDAO ticketDAO = new TicketDAO();
-
-                    ticketDAO.eliminarTicketGuardado(currentUser,ticket.getIdTicket());
+                    //AQUI VA UN MÉTODO PARA ELIMINAR EL TICKET.
                 }
             });
 
