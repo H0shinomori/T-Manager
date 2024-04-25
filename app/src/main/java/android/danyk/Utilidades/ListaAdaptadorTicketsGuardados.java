@@ -58,6 +58,16 @@ public class ListaAdaptadorTicketsGuardados extends RecyclerView.Adapter<ListaAd
             holder.titulo.setText(ticket.getTitulo());
             holder.estado.setText(ticket.getEstado());
             holder.prioridad.setText(ticket.getPrioridad());
+            if (ticket.getPrioridad().equals("Alta")) {
+                int color = ContextCompat.getColor(context, R.color.color_prioridad_alta);
+                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
+            } else if (ticket.getPrioridad().equals("Media")){
+                int color = ContextCompat.getColor(context, R.color.color_prioridad_media);
+                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
+            }else if (ticket.getPrioridad().equals("Baja")) {
+                int color = ContextCompat.getColor(context, R.color.color_prioridad_baja);
+                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
+            }
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint({"MissingInflatedId", "LocalSuppress"})
 
