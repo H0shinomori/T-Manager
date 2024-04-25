@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,11 +36,14 @@ public class MisTickets extends Fragment {
     DatabaseReference databaseReference;
     List<String> idsMisTickets;
     UserDAO userDAO;
+    Spinner spinnerFilter;
+    String selectedFilter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mis_tickets, container, false);
         recyclerView = view.findViewById(R.id.recycleViewMisTickets);
+        spinnerFilter = view.findViewById(R.id.spinnerFilter);
 
         elementos = new ArrayList<>();
         idsMisTickets = new ArrayList<>();
@@ -64,8 +70,27 @@ public class MisTickets extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
+                R.array.filters, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFilter.setAdapter(adapter);
+        spinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                selectedFilter = getResources().getStringArray(R.array.filters)[position];
+                actualizarTicketsCreados();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // No hacemos nada aquí
+            }
+        });
+
         return view;
     }
+
     private void actualizarTicketsCreados() {
         DatabaseReference ticketsReference = FirebaseDatabase.getInstance().getReference("ticket");
         ticketsReference.addValueEventListener(new ValueEventListener() {
@@ -74,7 +99,7 @@ public class MisTickets extends Fragment {
                 elementos.clear();
                 for (DataSnapshot dt : snapshot.getChildren()) {
                     Ticket ticket = dt.getValue(Ticket.class);
-                    if (idsMisTickets.contains(ticket.getIdTicket())) {
+                    if (idsMisTickets.contains(ticket.getIdTicket()) && cumpleFiltro(ticket)) {
                         elementos.add(ticket);
                     }
                 }
@@ -85,5 +110,14 @@ public class MisTickets extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+    }
+
+    private boolean cumpleFiltro(Ticket ticket) {
+        if (selectedFilter.equals("Pendientes")) {
+            return ticket.getEstado().equals("Pendiente");
+        } else if (selectedFilter.equals("Finalizados")) {
+            return ticket.getEstado().equals("Finalizado");
+        }
+        return false;
     }
 }

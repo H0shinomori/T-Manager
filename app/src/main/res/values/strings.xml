@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">T-Manager</string>
+    <string-array name="filters">
+        <item>Pendientes</item>
+        <item>Finalizados</item>
+    </string-array>
 </resources>

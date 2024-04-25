@@ -32,7 +32,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/ticket_logo"
-                app:tint="#1a2242"/>
+                app:tint="#1a2242" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -48,13 +48,13 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        style="@style/fuenteNegrita"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
                         android:text="Título:"
                         android:textColor="@color/black"
-                        android:textSize="19sp"
-                        style="@style/fuenteNegrita" />
+                        android:textSize="19sp" />
 
                     <TextView
                         android:id="@+id/ticket_titulo"
@@ -74,11 +74,11 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        style="@style/fuenteNegrita"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
                         android:text="Estado:"
-                        style="@style/fuenteNegrita"
                         android:textSize="16sp" />
 
                     <TextView
@@ -96,11 +96,11 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        style="@style/fuenteNegrita"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="2dp"
                         android:text="Prioridad:"
-                        style="@style/fuenteNegrita"
                         android:textSize="16sp" />
 
                     <TextView

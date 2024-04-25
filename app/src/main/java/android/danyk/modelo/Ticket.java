@@ -16,17 +16,18 @@ public class Ticket implements Parcelable {
     private String descripcion;
     private List<String> imageUris;
     private String idTicket;
+    private boolean finalizado;
 
     public Ticket() {
     }
 
-    public Ticket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris, String idTicket) {
-        this.titulo = titulo;
+    public Ticket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris, String idTicket, boolean finalizado) {        this.titulo = titulo;
         this.estado = estado;
         this.prioridad = prioridad;
         this.descripcion = descripcion;
         this.imageUris = imageUris;
         this.idTicket = idTicket;
+        this.finalizado = finalizado;
     }
 
     protected Ticket(Parcel in) {
@@ -36,6 +37,7 @@ public class Ticket implements Parcelable {
         descripcion = in.readString();
         imageUris = in.createStringArrayList();
         idTicket = in.readString();
+        finalizado = in.readByte() != 0;
     }
 
     public static final Creator<Ticket> CREATOR = new Creator<Ticket>() {
@@ -48,9 +50,17 @@ public class Ticket implements Parcelable {
         public Ticket[] newArray(int size) {
             return new Ticket[size];
         }
+
     };
 
     public Ticket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUrls, String s, String notas) {
+    }
+    public boolean isFinalizado() {
+        return finalizado;
+    }
+
+    public void setFinalizado(boolean finalizado) {
+        this.finalizado = finalizado;
     }
 
     public String getIdTicket() {
@@ -109,6 +119,7 @@ public class Ticket implements Parcelable {
         dest.writeString(descripcion);
         dest.writeStringList(imageUris);
         dest.writeString(idTicket);
+        dest.writeByte((byte) (finalizado ? 1 : 0));
     }
 
     @Override

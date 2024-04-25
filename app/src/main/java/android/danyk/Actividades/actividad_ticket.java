@@ -67,6 +67,7 @@ public class actividad_ticket extends AppCompatActivity {
     private StorageReference storageReference;
     private static final int SOLICITUD_CAMARA = 100;
     File photoFile;
+    private boolean finalizado = false;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -95,6 +96,7 @@ public class actividad_ticket extends AppCompatActivity {
         botonEnvio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finalizado = true;
                 subirImagenes();
             }
         });
@@ -278,9 +280,8 @@ public class actividad_ticket extends AppCompatActivity {
     }
 
     private void insertarDatos(List<String> imageUrls) {
-        String Titulo, Estado, Prioridad, Descripcion;
+        String Titulo, Prioridad, Descripcion;
         Titulo = String.valueOf(titulo.getText());
-        Estado = estado.getText().toString();
         Descripcion = String.valueOf(descripcion.getText());
 
         int radioButtonId = prioridad.getCheckedRadioButtonId();
@@ -289,9 +290,18 @@ public class actividad_ticket extends AppCompatActivity {
             RadioButton radioButton = findViewById(radioButtonId);
             Prioridad = radioButton.getText().toString();
 
-            TicketDAO ticketDAO = new TicketDAO();
+            // Aquí establecemos el valor de "finalizado" como true
+            finalizado = false;
 
-            ticketDAO.insertarTicket(Titulo, Estado, Prioridad, Descripcion, imageUrls, new OnCompleteListener<Void>() {
+            // Cambiamos el estado a "finalizado"
+            String estadoFinalizado = "Pendiente";
+
+            // Actualizamos el estado mostrado en la UI
+            estado.setText(estadoFinalizado);
+
+            // Llamamos al método insertarTicket con los valores actualizados
+            TicketDAO ticketDAO = new TicketDAO();
+            ticketDAO.insertarTicket(Titulo, estadoFinalizado, Prioridad, Descripcion, imageUrls, finalizado, new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
@@ -304,4 +314,5 @@ public class actividad_ticket extends AppCompatActivity {
             });
         }
     }
+
 }

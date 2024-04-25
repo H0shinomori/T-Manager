@@ -28,7 +28,6 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 import java.util.Objects;
-
 public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptadorMisTickets.ViewHolder> {
     private List<Ticket> datos;
     private final LayoutInflater inflater;
@@ -53,11 +52,22 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
     public void onBindViewHolder(@NonNull ListaAdaptadorMisTickets.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Ticket ticket = datos.get(position);
 
-        // Verificar si el ticket está guardado por el usuario
         if (idsMisTickets.contains(ticket.getIdTicket())) {
             holder.titulo.setText(ticket.getTitulo());
             holder.estado.setText(ticket.getEstado());
             holder.prioridad.setText(ticket.getPrioridad());
+
+            if (ticket.getPrioridad().equals("Alta")) {
+                int color = ContextCompat.getColor(context, R.color.color_prioridad_alta);
+                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
+            } else if (ticket.getPrioridad().equals("Media")){
+                int color = ContextCompat.getColor(context, R.color.color_prioridad_media);
+                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
+            }else if (ticket.getPrioridad().equals("Baja")) {
+                int color = ContextCompat.getColor(context, R.color.color_prioridad_baja);
+                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
+            }
+
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint({"MissingInflatedId", "LocalSuppress"})
 
@@ -69,7 +79,6 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
                     TextView prioridadPreview = dialogView.findViewById(R.id.prioridadTextViewPreview);
                     TextView descripcionPreview = dialogView.findViewById(R.id.descripcionTextViewPreview);
                     LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
-                    Button botonEditar = dialogView.findViewById(R.id.boton_editarTicket);
                     ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
 
                     tituloPreview.setText(ticket.getTitulo());
@@ -125,7 +134,6 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
     public int getItemCount() {
         return datos.size();
     }
-
     private int dipToPixels(Context context, float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
@@ -143,7 +151,6 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
             prioridad = itemView.findViewById(R.id.ticket_prioridad);
             cardView = itemView.findViewById(R.id.cardViewTicket);
             iconoGuardado = itemView.findViewById(R.id.icono_ticket_guardar);
-
         }
     }
 }

@@ -3,6 +3,7 @@ package android.danyk.DAO;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,9 +36,9 @@ public class TicketDAO {
         userTicketIdMap = new HashMap<>();
     }
 
-    public void insertarTicket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris, OnCompleteListener<Void> onCompleteListener) {
+    public void insertarTicket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris, boolean finalizado, OnCompleteListener<Void> onCompleteListener) {
         String idTicket = generateRandomId();
-        Ticket ticket = new Ticket(titulo, estado, prioridad, descripcion, imageUris, idTicket);
+        Ticket ticket = new Ticket(titulo, estado, prioridad, descripcion, imageUris, idTicket, finalizado);
         String id = databaseReference.child("ticket").push().getKey();
         assert id != null;
         databaseReference.child("ticket").child(id).setValue(ticket).addOnCompleteListener(onCompleteListener);
@@ -151,21 +152,9 @@ public class TicketDAO {
         });
     }
 
-
-    public void obtenerTicketPorId(String ticketId, ValueEventListener valueEventListener) {
+    public void eliminarTicketFinalizado(String ticketId, OnCompleteListener<Void> onCompleteListener) {
         DatabaseReference ticketRef = databaseReference.child("ticket").child(ticketId);
-        ticketRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                valueEventListener.onDataChange(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Manejar error
-                valueEventListener.onCancelled(databaseError);
-            }
-        });
+        ticketRef.removeValue().addOnCompleteListener(onCompleteListener);
     }
     public static String generateRandomId() {
         UUID uuid = UUID.randomUUID();

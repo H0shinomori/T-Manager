@@ -47,7 +47,6 @@ public class Inicio extends Fragment {
     List<Ticket> guardados;
     List<String> idsTicketsGuardados;
     UserDAO userDAO;
-    DrawerLayout drawerLayout;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -79,6 +78,7 @@ public class Inicio extends Fragment {
         String date = dateFormat.format(calendar.getTime());
         dayOfWeekTextView.setText(dayOfWeek.toUpperCase(Locale.getDefault()));
         dateTextView.setText(date);
+
 
         botonPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,14 +112,20 @@ public class Inicio extends Fragment {
             }
         });
 
+        TextView nombreUsuarioDrawer = view.findViewById(R.id.nombreUsuarioDrawer);
+        TextView apellidoUsuarioDrawer = view.findViewById(R.id.apellidoUsuarioDrawer);
+        TextView emailDrawer = view.findViewById(R.id.emailDrawer);
+        TextView rolUsuarioDrawer = view.findViewById(R.id.rolUsuarioDrawer);
+
         UserDAO userDAO = new UserDAO();
         FirebaseUser usuario = mAuth.getCurrentUser();
         if (userDAO.checkCurrentUser() && usuario != null) {
             String nombre = userDAO.getUserNombre();
-
             if (nombre != null) {
                 mostrarNombre.setText(nombre);
+                nombreUsuarioDrawer.setText(nombre);
             }
+
             boton_cerrar_sesion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -139,8 +145,12 @@ public class Inicio extends Fragment {
                 elementos.clear();
                 for (DataSnapshot dt : snapshot.getChildren()) {
                     Ticket ticket = dt.getValue(Ticket.class);
-                    if (!idsTicketsGuardados.contains(ticket.getIdTicket())) {
+                    // Añade la condición para filtrar los tickets según el campo "finalizado"
+                    if (!idsTicketsGuardados.contains(ticket.getIdTicket()) && !ticket.isFinalizado()) {
                         elementos.add(ticket);
+                    } else if (ticket.isFinalizado()) {
+                        // Elimina el ticket de la lista de inicio si está finalizado
+                        eliminarTicket(ticket.getIdTicket());
                     }
                 }
                 listaAdaptador.notifyDataSetChanged();
@@ -148,7 +158,20 @@ public class Inicio extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                // Manejo de error, si es necesario
             }
         });
+    }
+
+    // Método para eliminar un ticket de la lista de inicio
+    private void eliminarTicket(String idTicket) {
+        for (int i = 0; i < elementos.size(); i++) {
+            Ticket ticket = elementos.get(i);
+            if (ticket.getIdTicket().equals(idTicket)) {
+                elementos.remove(i);
+                listaAdaptador.notifyItemRemoved(i);
+                break;
+            }
+        }
     }
 }

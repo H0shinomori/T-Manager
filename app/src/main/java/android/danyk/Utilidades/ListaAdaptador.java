@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.danyk.Actividades.actividad_editarTicket;
 import android.danyk.DAO.TicketDAO;
 import android.danyk.DAO.UserDAO;
-import android.danyk.Fragmentos.Inicio;
 import android.danyk.R;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,17 +24,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import android.danyk.modelo.Ticket;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHolder> {
     private List<Ticket> datos;
@@ -54,7 +47,6 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
         this.idsTickets = idsTickets;
         this.guardados = guardados;
     }
-
     @NonNull
     @Override
     public ListaAdaptador.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -62,7 +54,6 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
         View v = inflater.inflate(R.layout.ticket_recycle_view, null);
         return new ViewHolder(v);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ListaAdaptador.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Ticket tickets = datos.get(position);
@@ -73,6 +64,17 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
             holder.estado.setText(tickets.getEstado());
             holder.prioridad.setText(tickets.getPrioridad());
             holder.iconoGuardado.setImageResource(R.drawable.ic_bookmark_noguardado);
+
+            if (tickets.getPrioridad().equals("Alta")) {
+                int color = ContextCompat.getColor(context, R.color.color_prioridad_alta);
+                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
+            } else if (tickets.getPrioridad().equals("Media")){
+                int color = ContextCompat.getColor(context, R.color.color_prioridad_media);
+                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
+            }else if (tickets.getPrioridad().equals("Baja")) {
+                int color = ContextCompat.getColor(context, R.color.color_prioridad_baja);
+                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
+            }
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint({"MissingInflatedId", "LocalSuppress"})
                 @Override
@@ -132,8 +134,6 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
                     });
                 }
             });
-
-
             holder.iconoGuardado.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
@@ -152,19 +152,14 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
             });
         }
     }
-
     private int dipToPixels(Context context, float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
-
     @Override
     public int getItemCount() {
         return datos.size();
     }
-
-
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView titulo, estado, prioridad;
         CardView cardView;
@@ -178,7 +173,5 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
             cardView = itemView.findViewById(R.id.cardViewTicket);
             iconoGuardado = itemView.findViewById(R.id.icono_ticket_guardar);
         }
-
     }
-
 }

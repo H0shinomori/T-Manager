@@ -17,11 +17,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -31,7 +36,7 @@ import java.util.Map;
 public class actividad_editarTicket extends AppCompatActivity {
     String usuarioActualId = FirebaseAuth.getInstance().getCurrentUser().getUid();
     Button botonCancelar, botonConfirmar;
-    DatabaseReference ticketsGuardadosRef;
+    DatabaseReference ticketsEditadosRef;
     DatabaseReference ticketsRef;
     TextView tituloPreview, estadoPreview, prioridadPreview, descripcionPreview, notasPreview;
     LinearLayout layoutVistaPreviaImagen;
@@ -41,7 +46,6 @@ public class actividad_editarTicket extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actividad_editar_ticket);
-
 
         layoutVistaPreviaImagen = findViewById(R.id.layout_vistaPreviaImagen);
         botonCancelar = findViewById(R.id.boton_cancelar);
@@ -75,7 +79,7 @@ public class actividad_editarTicket extends AppCompatActivity {
             }
         }
 
-
+        ticketsRef = FirebaseDatabase.getInstance().getReference().child("ticket"); // Agregado
         botonCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +90,39 @@ public class actividad_editarTicket extends AppCompatActivity {
         botonConfirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                assert ticket != null;
                 insertarDatos(ticket);
+            }
+        });
+        DatabaseReference ticketRef = FirebaseDatabase.getInstance().getReference("ticket");
+
+        ticketRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String idTicket = dataSnapshot.getKey();
+                    assert ticket != null;
+                    if (ticket.getIdTicket().equals(idTicket)) {
+                        dataSnapshot.getRef().removeValue()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // Ticket eliminado con éxito
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Manejar error
+                                    }
+                                });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Manejar error
             }
         });
     }
@@ -112,6 +148,7 @@ public class actividad_editarTicket extends AppCompatActivity {
         ticketValues.put("notas_añadidas", Notas);
         ticketValues.put("idTicket", ticket.getIdTicket());
         ticketValues.put("resuelto_por", usuarioActualId);
+        ticketValues.put("finalizado", true);
 
         if (ticket.getImageUris() != null && !ticket.getImageUris().isEmpty()) {
             Map<String, String> imagenes = new HashMap<>();
@@ -121,25 +158,49 @@ public class actividad_editarTicket extends AppCompatActivity {
             ticketValues.put("imagenes", imagenes);
         }
 
-        String nuevoTicketKey = ticketsGuardadosRef.push().getKey();
+        String ticketId = ticket.getIdTicket();
+        DatabaseReference ticketRef = FirebaseDatabase.getInstance().getReference("ticket").child(ticketId);
 
-        assert nuevoTicketKey != null;
-        ticketsGuardadosRef.child(nuevoTicketKey).setValue(ticketValues)
+        // Actualiza los valores del ticket en el nodo original "ticket"
+        ticketRef.updateChildren(ticketValues)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        ticketsRef.child(ticket.getIdTicket()).removeValue()
+                        // Aquí puedes realizar cualquier acción adicional después de actualizar los datos
+                        // Luego, continúa con el proceso de mover el ticket a "tickets_finalizados"
+                        moverTicketAFinalizados(ticketId, ticketValues);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Manejo de errores
+                    }
+                });
+    }
+
+    private void moverTicketAFinalizados(String ticketId, Map<String, Object> ticketValues) {
+        // Agrega el ticket actualizado a "tickets_finalizados"
+        DatabaseReference ticketsFinalizadosRef = FirebaseDatabase.getInstance().getReference("ticket").push();
+        ticketsFinalizadosRef.setValue(ticketValues)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Elimina el ticket original del nodo "ticket"
+                        DatabaseReference ticketRef = FirebaseDatabase.getInstance().getReference("ticket").child(ticketId);
+                        ticketRef.removeValue()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
+                                        // Aquí puedes agregar cualquier acción adicional después de eliminar el ticket original
                                         Intent intent = new Intent(actividad_editarTicket.this, actividad_menu.class);
                                         startActivity(intent);
-                                        Toast.makeText(actividad_editarTicket.this, "Datos guardados correctamente en ticket_finalizado", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
+                                        // Manejo de errores
                                     }
                                 });
                     }
@@ -147,7 +208,11 @@ public class actividad_editarTicket extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        // Manejo de errores
                     }
                 });
     }
+
+
+
 }

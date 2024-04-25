@@ -27,4 +27,8 @@
     <color name="pastel_diez">#F4F8FD</color>
     <color name="azul_marino">#002366</color>
     <color name="transparente">#00FF0000</color>
+    <color name="color_prioridad_alta">#FF0000</color>
+    <color name="color_prioridad_media">#FF9800</color>
+    <color name="color_prioridad_baja">#4CAF50</color>
+
 </resources>
