@@ -5,6 +5,7 @@ import android.danyk.DAO.UserDAO;
 import android.danyk.R;
 import android.danyk.Utilidades.ListaAdaptador;
 import android.danyk.modelo.Ticket;
+import android.danyk.modelo.User;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ public class Inicio extends Fragment {
     List<Ticket> guardados;
     List<String> idsTicketsGuardados;
     UserDAO userDAO;
+    String rolUsuario;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -112,18 +114,30 @@ public class Inicio extends Fragment {
             }
         });
 
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            rolUsuario = bundle.getString("rolUsuario");
+        }
         TextView nombreUsuarioDrawer = view.findViewById(R.id.nombreUsuarioDrawer);
-        TextView apellidoUsuarioDrawer = view.findViewById(R.id.apellidoUsuarioDrawer);
         TextView emailDrawer = view.findViewById(R.id.emailDrawer);
         TextView rolUsuarioDrawer = view.findViewById(R.id.rolUsuarioDrawer);
 
         UserDAO userDAO = new UserDAO();
-        FirebaseUser usuario = mAuth.getCurrentUser();
-        if (userDAO.checkCurrentUser() && usuario != null) {
-            String nombre = userDAO.getUserNombre();
+        User currentUser = userDAO.getCurrentUser();
+        if (currentUser != null) {
+            String nombre = currentUser.getNombre();
+            String correo = currentUser.getCorreo();
+            String rol = rolUsuario;
+
             if (nombre != null) {
                 mostrarNombre.setText(nombre);
                 nombreUsuarioDrawer.setText(nombre);
+            }
+            if (correo != null) {
+                emailDrawer.setText(correo);
+            }
+            if (rol != null) {
+                rolUsuarioDrawer.setText(rol);
             }
 
             boton_cerrar_sesion.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +147,7 @@ public class Inicio extends Fragment {
                 }
             });
         }
+
         return view;
     }
 

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/fondo_actividades"
     android:orientation="vertical"
+    android:id="@+id/fragment_mis_tickets"
     tools:context=".Fragmentos.Guardados">
 
     <LinearLayout

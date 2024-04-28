@@ -30,5 +30,6 @@
     <color name="color_prioridad_alta">#FF0000</color>
     <color name="color_prioridad_media">#FF9800</color>
     <color name="color_prioridad_baja">#4CAF50</color>
+    <color name="colorBarra">#2C396E</color>
 
 </resources>

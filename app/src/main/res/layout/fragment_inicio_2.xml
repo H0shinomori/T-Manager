@@ -29,6 +29,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
                     android:text="Hola"
                     android:textColor="@color/white"
                     android:textSize="25sp" />
@@ -88,75 +89,101 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
-    <!-- Tarjetas -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_marginTop="100dp"
         android:background="@drawable/background_cardview"
-        android:layout_marginTop="100dp">
+        android:orientation="vertical">
 
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="70dp"
             android:columnCount="2"
             android:orientation="vertical"
-            android:rowCount="2"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:rowCount="2">
 
-            <!-- Tarjeta 1 -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
-                android:layout_height="270dp"
+                android:layout_height="200dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
+                android:layout_marginTop="40dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
                 app:cardUseCompatPadding="true">
 
-                <!-- Contenido de la tarjeta 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/fuenteNegrita"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:text="Tickets pendientes: "
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/contadorTicketPendiente"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+                    \
+                </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Tarjeta 2 -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
-                android:layout_height="270dp"
+                android:layout_height="200dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="4dp"
+                android:layout_marginTop="40dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp"
                 app:cardUseCompatPadding="true">
 
-                <!-- Contenido de la tarjeta 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            </androidx.cardview.widget.CardView>
 
-            <!-- Tarjeta 3 -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="270dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="4dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp"
-                app:cardUseCompatPadding="true">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-                <!-- Contenido de la tarjeta 3 -->
+                        <TextView
+                            style="@style/fuenteNegrita"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:text="Tickets Finalizados: "
+                            android:textSize="18sp" />
 
-            </androidx.cardview.widget.CardView>
-
-            <!-- Tarjeta 4 -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="270dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="4dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp"
-                app:cardUseCompatPadding="true">
-
-                <!-- Contenido de la tarjeta 4 -->
+                        <TextView
+                            android:id="@+id/contadorTicketFinalizado"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+                </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 

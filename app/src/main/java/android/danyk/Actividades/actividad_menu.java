@@ -85,7 +85,11 @@ public class actividad_menu extends AppCompatActivity {
                         if (rolUsuario.equals("Tecnico")) {
                             cargarFragmento(new Historial(), false);
                         } else if (rolUsuario.equals("Usuario")) {
-                            cargarFragmento(new Perfil(), false);
+                            Fragment perfilFragment = new Perfil();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("rolUsuario", rolUsuario);
+                            perfilFragment.setArguments(bundle);
+                            cargarFragmento(perfilFragment, false);
                         }
                     }
                 }
@@ -119,13 +123,21 @@ public class actividad_menu extends AppCompatActivity {
 
     private void cargarFragmentoSegunRol() {
         if (rolUsuario != null) {
+            Fragment fragment;
             if (rolUsuario.equals("Tecnico")) {
-                cargarFragmento(new Inicio(), true);
+                fragment = new Inicio();
             } else if (rolUsuario.equals("Usuario")) {
-                cargarFragmento(new Inicio_2(), true);
+                fragment = new Inicio_2();
+            } else {
+                fragment = new Fragment(); // Fragmento por defecto o manejo de error
             }
+            Bundle bundle = new Bundle();
+            bundle.putString("rolUsuario", rolUsuario);
+            fragment.setArguments(bundle);
+            cargarFragmento(fragment, true);
         }
     }
+
 
     private void cargarFragmento(Fragment fragment, boolean isAppInitialized) {
         FragmentManager fragmentManager = getSupportFragmentManager();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.danyk.Actividades.actividad_login;
 import android.danyk.Actividades.actividad_menu;
+import android.danyk.modelo.User;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -48,6 +49,15 @@ public class UserDAO {
         else{
             return false;
         }
+    }
+    public User getCurrentUser() {
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser != null) {
+            String nombre = firebaseUser.getDisplayName();
+            String correo = firebaseUser.getEmail();
+            return new User(nombre, null, correo, null, null);
+        }
+        return null;
     }
 
     public void loginUser(Context context, String mail, String password){

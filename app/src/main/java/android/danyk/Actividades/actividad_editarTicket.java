@@ -79,7 +79,7 @@ public class actividad_editarTicket extends AppCompatActivity {
             }
         }
 
-        ticketsRef = FirebaseDatabase.getInstance().getReference().child("ticket"); // Agregado
+        ticketsRef = FirebaseDatabase.getInstance().getReference().child("ticket");
         botonCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

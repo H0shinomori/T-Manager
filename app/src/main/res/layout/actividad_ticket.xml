@@ -55,6 +55,7 @@
                 <TextView
                     android:id="@+id/creacion_ticket_usuario"
                     android:layout_width="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:layout_height="wrap_content"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -157,7 +158,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/creacion_ticket_descripcion"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="160dp"
                 android:background="@null"
                 android:gravity="top|start"
                 android:padding="10dp"
@@ -169,13 +170,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:background="@drawable/button_login"
+                app:backgroundTint="#1a2242"
                 android:text="Adjuntar imágenes"
+                android:layout_marginBottom="10dp"
                 android:textColor="@android:color/white"
                 app:cornerRadius="4dp" />
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:scrollbars="none"
+                android:layout_height="190dp">
 
                 <LinearLayout
                     android:id="@+id/linear_layout_vista_previa"
@@ -196,12 +201,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/button_login"
+                    app:backgroundTint="#1a2242"
                     android:text="Cancelar" />
 
                 <Button
                     android:id="@+id/creacion_ticket_enviar"
                     style="@style/fuenteNegrita"
                     android:layout_width="0dp"
+                    android:background="@drawable/button_login"
+                    app:backgroundTint="#1a2242"
+                    android:layout_margin="5dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Enviar" />

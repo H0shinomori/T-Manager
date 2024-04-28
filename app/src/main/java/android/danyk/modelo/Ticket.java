@@ -17,6 +17,8 @@ public class Ticket implements Parcelable {
     private List<String> imageUris;
     private String idTicket;
     private boolean finalizado;
+    private String hechoPor;
+    private String notas;
 
     public Ticket() {
     }
@@ -29,6 +31,17 @@ public class Ticket implements Parcelable {
         this.idTicket = idTicket;
         this.finalizado = finalizado;
     }
+    public Ticket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris, String idTicket, boolean finalizado, String hechoPor, String notas) {
+        this.titulo = titulo;
+        this.estado = estado;
+        this.prioridad = prioridad;
+        this.descripcion = descripcion;
+        this.imageUris = imageUris;
+        this.idTicket = idTicket;
+        this.finalizado = finalizado;
+        this.hechoPor = hechoPor;
+        this.notas = notas;
+    }
 
     protected Ticket(Parcel in) {
         titulo = in.readString();
@@ -38,6 +51,8 @@ public class Ticket implements Parcelable {
         imageUris = in.createStringArrayList();
         idTicket = in.readString();
         finalizado = in.readByte() != 0;
+        hechoPor = in.readString();
+        notas = in.readString();
     }
 
     public static final Creator<Ticket> CREATOR = new Creator<Ticket>() {
@@ -110,6 +125,21 @@ public class Ticket implements Parcelable {
     public void setImageUris(List<String> imageUris) {
         this.imageUris = imageUris;
     }
+    public String getHechoPor() {
+        return hechoPor;
+    }
+
+    public void setHechoPor(String hechoPor) {
+        this.hechoPor = hechoPor;
+    }
+
+    public String getNotas() {
+        return notas;
+    }
+
+    public void setNotas(String notas) {
+        this.notas = notas;
+    }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -120,6 +150,8 @@ public class Ticket implements Parcelable {
         dest.writeStringList(imageUris);
         dest.writeString(idTicket);
         dest.writeByte((byte) (finalizado ? 1 : 0));
+        dest.writeString(hechoPor);
+        dest.writeString(notas);
     }
 
     @Override

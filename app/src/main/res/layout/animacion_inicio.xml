@@ -20,6 +20,7 @@
             android:scaleType="fitCenter"
             android:src="@drawable/logo3"
             tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="-42dp" />
+            tools:layout_editor_absoluteX="-42dp"
+            app:tint="@color/white" />
 
 </RelativeLayout>

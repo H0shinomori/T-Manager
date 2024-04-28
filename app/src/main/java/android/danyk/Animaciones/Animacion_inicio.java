@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.danyk.Actividades.actividad_login;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -36,12 +38,17 @@ public class Animacion_inicio extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.animacion_inicio);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorBarra));
+        }
+
         final ImageView logoImageView = findViewById(R.id.logoImageView);
         final TextView appNameTextView = new TextView(this);
         appNameTextView.setText("T-Manager");
         appNameTextView.setTextColor(getResources().getColor(android.R.color.black));
         appNameTextView.setTextSize(40);
-        appNameTextView.setTextColor(Color.parseColor("#002366"));
+        appNameTextView.setTextColor(Color.parseColor("#ffffff"));
         appNameTextView.setVisibility(View.INVISIBLE);
 
         Typeface typeface = Typeface.createFromAsset(getAssets(), "Nexa_Heavy.ttf");

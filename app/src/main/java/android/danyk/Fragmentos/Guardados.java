@@ -54,7 +54,6 @@ public class Guardados extends Fragment {
                     String idTicket = dt.getValue(String.class);
                     idsTicketsGuardados.add(idTicket);
                 }
-                // Actualizar la lista de tickets guardados
                 actualizarTicketsGuardados();
             }
 

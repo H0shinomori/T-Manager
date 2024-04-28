@@ -120,7 +120,9 @@ public class ListaAdaptadorTicketsGuardados extends RecyclerView.Adapter<ListaAd
                     botonEditar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Ticket ticket = datos.get(position);
                             Intent intent = new Intent(context, actividad_editarTicket.class);
+                            intent.putExtra("ticket", ticket);
                             context.startActivity(intent);
                         }
                     });
@@ -133,7 +135,6 @@ public class ListaAdaptadorTicketsGuardados extends RecyclerView.Adapter<ListaAd
                     Ticket ticket = datos.get(position);
                     notifyItemChanged(position);
 
-                    // Obtener el usuario actual
                     UserDAO userDAO = new UserDAO();
                     String currentUser = userDAO.getUserID();
                     TicketDAO ticketDAO = new TicketDAO();

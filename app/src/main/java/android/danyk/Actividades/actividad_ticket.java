@@ -80,6 +80,7 @@ public class actividad_ticket extends AppCompatActivity {
         TextView mostrarNombre = findViewById(R.id.creacion_ticket_usuario);
         estado = findViewById(R.id.creacion_ticket_estado);
         Button botonEnvio = findViewById(R.id.creacion_ticket_enviar);
+        Button botonCancelar = findViewById(R.id.creacion_ticket_cancelar);
         titulo = findViewById(R.id.creacion_ticket_titulo);
         descripcion = findViewById(R.id.creacion_ticket_descripcion);
         prioridad = findViewById(R.id.creacion_ticket_prioridad);
@@ -92,7 +93,13 @@ public class actividad_ticket extends AppCompatActivity {
                 mostrarSeleccion();
             }
         });
-
+        botonCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(actividad_ticket.this, actividad_menu.class);
+                startActivity(intent);
+            }
+        });
         botonEnvio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

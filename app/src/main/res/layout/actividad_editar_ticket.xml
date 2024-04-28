@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
@@ -14,13 +13,14 @@
         android:background="@drawable/background_cardview1"
         android:gravity="center"
         android:orientation="horizontal">
+
         <TextView
+            style="@style/fuenteNegrita"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="30dp"
             android:text="Editar Ticket"
-            style="@style/fuenteNegrita"/>
+            android:textColor="@color/white"
+            android:textSize="30dp" />
 
     </LinearLayout>
 
@@ -28,9 +28,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="70dp"
-        android:padding="20dp"
         android:background="@drawable/background_cardview"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -54,6 +54,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:text="Título: "
+                        android:textColor="@color/black"
                         android:textSize="20sp" />
 
                     <TextView
@@ -78,6 +79,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:text="Estado: "
+                        android:textColor="@color/black"
                         android:textSize="18sp" />
 
                     <TextView
@@ -99,6 +101,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:text="Prioridad: "
+                        android:textColor="@color/black"
                         android:textSize="18sp" />
 
                     <TextView
@@ -116,6 +119,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Descripción:"
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <ScrollView
@@ -134,6 +138,9 @@
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+
                     android:scrollbars="none">
 
                     <LinearLayout
@@ -147,24 +154,22 @@
                     style="@style/fuenteNegrita"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#4AFFEB3B"
                     android:gravity="center"
                     android:text="Añadir Notas:"
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:background="#4AFFEB3B"
-                    android:scrollbars="none">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/notasTextViewPreview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:textSize="18sp" />
-                </ScrollView>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/notasTextViewPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@drawable/redondear_bordes"
+                    android:backgroundTint="#4AFFEB3B"
+                    android:gravity="top|start"
+                    android:padding="10dp"
+                    android:textSize="18sp" />
+
 
                 <LinearLayout
                     android:id="@+id/linear_layout_vista_previa"
@@ -175,24 +180,32 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/boton_cancelar"
                         style="@style/fuenteNegrita"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:text="Cancelar" />
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_login"
+                        android:text="Cancelar"
+                        app:backgroundTint="#1a2242" />
 
                     <Button
                         android:id="@+id/boton_confirmar"
                         style="@style/fuenteNegrita"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:text="Confirmar" />
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_login"
+                        android:text="Confirmar"
+                        app:backgroundTint="#1a2242" />
                 </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -37,7 +37,7 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
     private List<Ticket> datosFiltrados;
     private final LayoutInflater inflater;
     private final Context context;
-    ImageView iconoEstado;
+
 
 
     public ListaAdaptadorHistorial(List<Ticket> itemList, Fragment context) {
@@ -57,7 +57,6 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Ticket tickets = datosFiltrados.get(position);
-        String ticketId = tickets.getIdTicket();
 
         holder.titulo.setText(tickets.getTitulo());
         holder.estado.setText(tickets.getEstado());
@@ -79,17 +78,21 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
             @SuppressLint({"MissingInflatedId", "LocalSuppress"})
             @Override
             public void onClick(View v) {
-                View dialogView = inflater.inflate(R.layout.ticket_preview, null);
+                View dialogView = inflater.inflate(R.layout.ticket_preview2, null);
                 TextView tituloPreview = dialogView.findViewById(R.id.tituloTextViewPreview);
                 TextView estadoPreview = dialogView.findViewById(R.id.estadoTextViewPreview);
                 TextView prioridadPreview = dialogView.findViewById(R.id.prioridadTextViewPreview);
                 TextView descripcionPreview = dialogView.findViewById(R.id.descripcionTextViewPreview);
                 LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
+                TextView notasPreview = dialogView.findViewById(R.id.notasTextViewPreview);
+                TextView hechoPorPreview = dialogView.findViewById(R.id.hechoPorTextViewPreview);
 
                 tituloPreview.setText(tickets.getTitulo());
                 estadoPreview.setText(tickets.getEstado());
                 prioridadPreview.setText(tickets.getPrioridad());
                 descripcionPreview.setText(tickets.getDescripcion());
+                notasPreview.setText(tickets.getNotas());
+                hechoPorPreview.setText(tickets.getHechoPor());
 
                 layoutVistaPreviaImagen.removeAllViews();
 
