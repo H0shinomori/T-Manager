@@ -92,18 +92,50 @@ public class MisTickets extends Fragment {
     }
 
     private void actualizarTicketsCreados() {
-        DatabaseReference ticketsReference = FirebaseDatabase.getInstance().getReference("ticket");
-        ticketsReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("usuarios").child(userDAO.getUserID()).child("idsCreados");
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                elementos.clear();
+                List<String> idsMisTickets = new ArrayList<>();
                 for (DataSnapshot dt : snapshot.getChildren()) {
-                    Ticket ticket = dt.getValue(Ticket.class);
-                    if (idsMisTickets.contains(ticket.getIdTicket()) && cumpleFiltro(ticket)) {
-                        elementos.add(ticket);
-                    }
+                    String idTicket = dt.getValue(String.class);
+                    idsMisTickets.add(idTicket);
                 }
-                listaAdaptador.notifyDataSetChanged();
+                DatabaseReference ticketsReference = FirebaseDatabase.getInstance().getReference("ticket");
+                ticketsReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        elementos.clear();
+                        for (DataSnapshot dt : snapshot.getChildren()) {
+                            Ticket ticket = dt.getValue(Ticket.class);
+                            if (idsMisTickets.contains(ticket.getIdTicket()) && cumpleFiltro(ticket)) {
+                                if (ticket.getEstado().equals("Finalizado")) {
+                                    // Si el ticket está finalizado, lo agregamos a la lista sin cambios
+                                    elementos.add(ticket);
+                                } else {
+                                    // Si el ticket está pendiente, verificamos si hay otro ticket finalizado con el mismo ID
+                                    boolean encontrado = false;
+                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                        Ticket otroTicket = dataSnapshot.getValue(Ticket.class);
+                                        if (otroTicket.getIdTicket().equals(ticket.getIdTicket()) && otroTicket.getEstado().equals("Finalizado")) {
+                                            encontrado = true;
+                                            break;
+                                        }
+                                    }
+                                    // Si no se encontró un ticket finalizado con el mismo ID, agregamos el ticket pendiente
+                                    if (!encontrado) {
+                                        elementos.add(ticket);
+                                    }
+                                }
+                            }
+                        }
+                        listaAdaptador.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
             }
 
             @Override
@@ -111,6 +143,9 @@ public class MisTickets extends Fragment {
             }
         });
     }
+
+
+
 
     private boolean cumpleFiltro(Ticket ticket) {
         if (selectedFilter.equals("Pendientes")) {

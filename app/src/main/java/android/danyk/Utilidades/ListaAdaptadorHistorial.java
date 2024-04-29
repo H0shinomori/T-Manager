@@ -101,8 +101,8 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
                         ImageView imageView = new ImageView(context);
                         assert context != null;
                         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                                dipToPixels(context, 250),
-                                dipToPixels(context, 400)
+                                dipToPixels(context, 350),
+                                dipToPixels(context, 500)
                         );
                         layoutParams.setMargins(10, 0, 10, 0);
                         imageView.setLayoutParams(layoutParams);
@@ -116,6 +116,7 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
                 Drawable background = ContextCompat.getDrawable(context, R.drawable.redondear_bordes);
                 Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(background);
                 dialog.setView(dialogView);
+
                 dialog.show();
             }
         });

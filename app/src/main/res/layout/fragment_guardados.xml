@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/fondo_actividades"
     android:orientation="vertical"
+    android:id="@+id/fragment_guardados"
     tools:context=".Fragmentos.Guardados">
 
     <LinearLayout

@@ -26,7 +26,9 @@ import android.view.WindowManager;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class Inicio_2 extends Fragment {
@@ -63,7 +65,29 @@ public class Inicio_2 extends Fragment {
         dayOfWeekTextView.setText(dayOfWeek.toUpperCase(Locale.getDefault()));
         dateTextView.setText(date);
 
-        ticketsReference.orderByChild("usuarioId").equalTo(userID).addValueEventListener(new ValueEventListener() {
+        UserDAO userDAO = new UserDAO();
+        FirebaseUser usuario = mAuth.getCurrentUser();
+        if (userDAO.checkCurrentUser() && usuario != null) {
+            String nombre = userDAO.getUserNombre();
+            userID = usuario.getUid();
+            mostrarNombre.setText(nombre);
+
+            boton_cerrar_sesion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    userDAO.cerrarSesion(getActivity());
+                }
+            });
+
+            // Contador de tickets pendientes y finalizados por usuario
+            actualizarContadoresTicketsPorUsuario();
+        }
+
+        return view;
+    }
+
+    private void actualizarContadoresTicketsPorUsuario() {
+        ticketsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int countPendiente = 0;
@@ -71,14 +95,16 @@ public class Inicio_2 extends Fragment {
 
                 for (DataSnapshot dt : snapshot.getChildren()) {
                     Ticket ticket = dt.getValue(Ticket.class);
-
-                    assert ticket != null;
-                    if (ticket.getEstado().equals("Pendiente")) {
-                        countPendiente++;
-                    } else if (ticket.getEstado().equals("Finalizado")) {
-                        countFinalizado++;
+                    if (ticket != null) {
+                        if (ticket.getEstado().equals("Pendiente")) {
+                            countPendiente++;
+                        } else if (ticket.getEstado().equals("Finalizado")) {
+                            countFinalizado++;
+                        }
                     }
                 }
+
+                // Actualizar los contadores
                 contadorTicketPendiente.setText(String.valueOf(countPendiente));
                 contadorTicketFinalizado.setText(String.valueOf(countFinalizado));
             }
@@ -88,23 +114,5 @@ public class Inicio_2 extends Fragment {
                 // Manejo de errores
             }
         });
-
-        UserDAO userDAO = new UserDAO();
-        FirebaseUser usuario = mAuth.getCurrentUser();
-        if (userDAO.checkCurrentUser() && usuario != null) {
-            String nombre = userDAO.getUserNombre();
-
-            if (nombre != null) {
-                userID = usuario.getUid();
-                mostrarNombre.setText(nombre);
-            }
-            boton_cerrar_sesion.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    userDAO.cerrarSesion(getActivity());
-                }
-            });
-        }
-        return view;
     }
 }

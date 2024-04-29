@@ -69,8 +69,8 @@ public class actividad_editarTicket extends AppCompatActivity {
             for (String imageUrl : ticket.getImageUris()) {
                 ImageView imageView = new ImageView(this);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        dipToPixels(this, 250),
-                        dipToPixels(this, 400)
+                        dipToPixels(this, 350),
+                        dipToPixels(this, 500)
                 );
                 layoutParams.setMargins(10, 0, 10, 0);
                 imageView.setLayoutParams(layoutParams);
@@ -212,7 +212,4 @@ public class actividad_editarTicket extends AppCompatActivity {
                     }
                 });
     }
-
-
-
 }

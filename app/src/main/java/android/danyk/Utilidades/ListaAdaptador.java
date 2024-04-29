@@ -100,8 +100,8 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
                             ImageView imageView = new ImageView(context);
                             assert context != null;
                             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                                    dipToPixels(context, 250),
-                                    dipToPixels(context, 400)
+                                    dipToPixels(context, 350),
+                                    dipToPixels(context, 500)
                             );
                             layoutParams.setMargins(10, 0, 10, 0);
                             imageView.setLayoutParams(layoutParams);

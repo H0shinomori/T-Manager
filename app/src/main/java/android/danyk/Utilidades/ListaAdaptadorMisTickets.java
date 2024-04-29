@@ -73,7 +73,7 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
 
                 @Override
                 public void onClick(View v) {
-                    View dialogView = inflater.inflate(R.layout.ticket_preview, null);
+                    View dialogView = inflater.inflate(R.layout.ticket_preview3, null);
                     TextView tituloPreview = dialogView.findViewById(R.id.tituloTextViewPreview);
                     TextView estadoPreview = dialogView.findViewById(R.id.estadoTextViewPreview);
                     TextView prioridadPreview = dialogView.findViewById(R.id.prioridadTextViewPreview);
@@ -93,8 +93,8 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
                             ImageView imageView = new ImageView(context);
                             assert context != null;
                             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                                    dipToPixels(context, 250),
-                                    dipToPixels(context, 400)
+                                    dipToPixels(context, 350),
+                                    dipToPixels(context, 500)
                             );
                             layoutParams.setMargins(10, 0, 10, 0);
                             imageView.setLayoutParams(layoutParams);

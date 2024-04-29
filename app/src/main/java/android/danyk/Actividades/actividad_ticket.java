@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.danyk.R;
 import android.danyk.Utilidades.ImagePreviewItem;
 import android.database.Cursor;
@@ -22,13 +23,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +72,7 @@ public class actividad_ticket extends AppCompatActivity {
     private static final int SOLICITUD_CAMARA = 100;
     File photoFile;
     private boolean finalizado = false;
+    private ScrollView scrollView;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -85,6 +90,7 @@ public class actividad_ticket extends AppCompatActivity {
         descripcion = findViewById(R.id.creacion_ticket_descripcion);
         prioridad = findViewById(R.id.creacion_ticket_prioridad);
         storageReference = FirebaseStorage.getInstance().getReference();
+        scrollView = findViewById(R.id.scrollView);
 
         Button botonAdjuntarImagen = findViewById(R.id.boton_adjuntarImagen);
         botonAdjuntarImagen.setOnClickListener(new View.OnClickListener() {
@@ -132,24 +138,32 @@ public class actividad_ticket extends AppCompatActivity {
 
     private void mostrarVistaPrevia() {
         linearLayoutVistaPrevia.removeAllViews();
-        for (int i = 0; i < imageUris.size(); i++) {
-            View previewView = LayoutInflater.from(this).inflate(R.layout.image_preview_item, null);
-            String imageName = getFileNameFromUri(imageUris.get(i));
-            TextView imageNameTextView = previewView.findViewById(R.id.image_name);
-            imageNameTextView.setText(imageName);
-            ImageView eliminarFoto = previewView.findViewById(R.id.eliminarFoto);
-            int finalI = i;
-            eliminarFoto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    imageUris.remove(finalI);
-                    mostrarVistaPrevia();
-                }
-            });
+        if (imageUris.isEmpty()) {
+            scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));        } else {
+            Resources r = getResources();
+            int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, r.getDisplayMetrics());
+            scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, px));
 
-            linearLayoutVistaPrevia.addView(previewView);
+            for (int i = 0; i < imageUris.size(); i++) {
+                View previewView = LayoutInflater.from(this).inflate(R.layout.image_preview_item, null);
+                String imageName = getFileNameFromUri(imageUris.get(i));
+                TextView imageNameTextView = previewView.findViewById(R.id.image_name);
+                imageNameTextView.setText(imageName);
+                ImageView eliminarFoto = previewView.findViewById(R.id.eliminarFoto);
+                int finalI = i;
+                eliminarFoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imageUris.remove(finalI);
+                        mostrarVistaPrevia();
+                    }
+                });
+
+                linearLayoutVistaPrevia.addView(previewView);
+            }
         }
     }
+
 
     @SuppressLint("Range")
     private String getFileNameFromUri(Uri uri) {
@@ -296,17 +310,9 @@ public class actividad_ticket extends AppCompatActivity {
         if (radioButtonId != -1) {
             RadioButton radioButton = findViewById(radioButtonId);
             Prioridad = radioButton.getText().toString();
-
-            // Aquí establecemos el valor de "finalizado" como true
             finalizado = false;
-
-            // Cambiamos el estado a "finalizado"
             String estadoFinalizado = "Pendiente";
-
-            // Actualizamos el estado mostrado en la UI
             estado.setText(estadoFinalizado);
-
-            // Llamamos al método insertarTicket con los valores actualizados
             TicketDAO ticketDAO = new TicketDAO();
             ticketDAO.insertarTicket(Titulo, estadoFinalizado, Prioridad, Descripcion, imageUrls, finalizado, new OnCompleteListener<Void>() {
                 @Override
