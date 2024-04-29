@@ -122,7 +122,9 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
             holder.iconoGuardado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //AQUI VA UN MÉTODO PARA ELIMINAR EL TICKET.
+                    UserDAO userDAO = new UserDAO();
+                    TicketDAO ticketDAO = new TicketDAO();
+                    ticketDAO.eliminarMiTicket(userDAO.getUserID(),ticket.getIdTicket());
                 }
             });
 
