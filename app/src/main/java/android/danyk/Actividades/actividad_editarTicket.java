@@ -192,7 +192,6 @@ public class actividad_editarTicket extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        // Aquí puedes agregar cualquier acción adicional después de eliminar el ticket original
                                         Intent intent = new Intent(actividad_editarTicket.this, actividad_menu.class);
                                         startActivity(intent);
                                     }
