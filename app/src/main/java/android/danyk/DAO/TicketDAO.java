@@ -152,6 +152,39 @@ public class TicketDAO {
         });
     }
 
+    public void eliminarMiTicket(String usuarioId, String ticketId) {
+        DatabaseReference usuarioRef = databaseReference.child("usuarios").child(usuarioId);
+
+        usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Obtener la lista de idsGuardados del usuario
+                    List<String> idsGuardados = new ArrayList<>();
+                    DataSnapshot idsGuardadosSnapshot = dataSnapshot.child("idsCreados");
+                    for (DataSnapshot childSnapshot : idsGuardadosSnapshot.getChildren()) {
+                        String idGuardado = childSnapshot.getValue(String.class);
+                        if (!idGuardado.equals(ticketId)) {
+                            // Agregar todos los idsGuardados excepto el que se va a eliminar
+                            idsGuardados.add(idGuardado);
+                        }
+                    }
+
+                    // Actualizar la lista de idsGuardados del usuario
+                    usuarioRef.child("idsCreados").setValue(idsGuardados);
+                } else {
+                    // El usuario no existe en la base de datos
+                    // Manejar según sea necesario
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Manejar error
+            }
+        });
+    }
+
     public void eliminarTicketFinalizado(String ticketId, OnCompleteListener<Void> onCompleteListener) {
         DatabaseReference ticketRef = databaseReference.child("ticket").child(ticketId);
         ticketRef.removeValue().addOnCompleteListener(onCompleteListener);
