@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fadeScrollbars="false"
-        android:scrollbarThumbHorizontal="@color/azulito"
+        android:padding="10dp"
+        android:scrollbarThumbHorizontal="@color/azul_marino"
         android:scrollbarTrackHorizontal="@color/white">
 
         <LinearLayout
@@ -32,9 +33,46 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
+                    android:text="Título: "
+                    android:textColor="@color/black"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/tituloTextViewPreview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="2"
+                    android:textSize="25sp" />
+                <ImageButton
+                    android:id="@+id/cerrar_dialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparente"
+                    android:src="@drawable/ic_exitdialog" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="-------------------------------------------"
+                android:textColor="@color/grey" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/fuenteNegrita"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
                     android:text="Completado por: "
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/hechoPorTextViewPreview"
@@ -56,12 +94,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="Título: "
+                    android:text="Creado por: "
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/tituloTextViewPreview"
+                    android:id="@+id/creadoPorTextViewPreview"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -70,6 +108,9 @@
                     android:textSize="18sp" />
 
             </LinearLayout>
+
+
+
 
 
             <LinearLayout
@@ -120,13 +161,14 @@
                 style="@style/fuenteNegrita"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Descripción:"
+                android:text="Descripción"
+                android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="100dp"
                 android:scrollbars="none">
 
                 <TextView
@@ -135,6 +177,12 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp" />
             </ScrollView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="-------------------------------------------"
+                android:textColor="@color/grey" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -147,16 +195,24 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" />
             </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="-------------------------------------------"
+                android:textColor="@color/grey" />
+
             <TextView
                 style="@style/fuenteNegrita"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Notas Añadidas:"
+                android:text="Notas Añadidas"
+                android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="100dp"
                 android:scrollbars="none">
 
                 <TextView

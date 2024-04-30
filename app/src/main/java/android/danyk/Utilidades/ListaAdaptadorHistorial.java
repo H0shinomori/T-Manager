@@ -86,6 +86,7 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
                 LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
                 TextView notasPreview = dialogView.findViewById(R.id.notasTextViewPreview);
                 TextView hechoPorPreview = dialogView.findViewById(R.id.hechoPorTextViewPreview);
+                ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
 
                 tituloPreview.setText(tickets.getTitulo());
                 estadoPreview.setText(tickets.getEstado());
@@ -116,6 +117,12 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
                 Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(background);
                 dialog.setView(dialogView);
                 dialog.show();
+                botonCerrarDialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
 

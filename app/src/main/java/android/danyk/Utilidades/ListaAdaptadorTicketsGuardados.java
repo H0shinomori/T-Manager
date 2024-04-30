@@ -52,12 +52,11 @@ public class ListaAdaptadorTicketsGuardados extends RecyclerView.Adapter<ListaAd
     @Override
     public void onBindViewHolder(@NonNull ListaAdaptadorTicketsGuardados.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Ticket ticket = datos.get(position);
-
-        // Verificar si el ticket está guardado por el usuario
         if (idsTicketsGuardados.contains(ticket.getIdTicket())) {
             holder.titulo.setText(ticket.getTitulo());
             holder.estado.setText(ticket.getEstado());
             holder.prioridad.setText(ticket.getPrioridad());
+
             if (ticket.getPrioridad().equals("Alta")) {
                 int color = ContextCompat.getColor(context, R.color.color_prioridad_alta);
                 holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
@@ -81,11 +80,13 @@ public class ListaAdaptadorTicketsGuardados extends RecyclerView.Adapter<ListaAd
                     LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
                     Button botonEditar = dialogView.findViewById(R.id.boton_editarTicket);
                     ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
+                    TextView creadoPor = dialogView.findViewById(R.id.creadoPorTextViewPreview);
 
                     tituloPreview.setText(ticket.getTitulo());
                     estadoPreview.setText(ticket.getEstado());
                     prioridadPreview.setText(ticket.getPrioridad());
                     descripcionPreview.setText(ticket.getDescripcion());
+                    creadoPor.setText(ticket.getCreadoPor());
 
                     layoutVistaPreviaImagen.removeAllViews();
 
@@ -123,6 +124,7 @@ public class ListaAdaptadorTicketsGuardados extends RecyclerView.Adapter<ListaAd
                             Ticket ticket = datos.get(position);
                             Intent intent = new Intent(context, actividad_editarTicket.class);
                             intent.putExtra("ticket", ticket);
+                            intent.putExtra("creadoPor", ticket.getCreadoPor());
                             context.startActivity(intent);
                         }
                     });

@@ -78,7 +78,13 @@ public class actividad_menu extends AppCompatActivity {
                         }
                     }
                 } else if (itemID == R.id.navGuardados) {
-                    // No hagas nada aquí para que el ítem "Guardados" no se procese para usuarios normales
+                    if (rolUsuario != null){
+                        if (rolUsuario.equals("Tecnico")) {
+                            cargarFragmento(new Guardados(), false);
+                        } else if (rolUsuario.equals("Usuario")) {
+                            // No hagas nada aquí para que el ítem "Guardados" no se procese para usuarios normales
+                        }
+                    }
                 } else if (itemID == R.id.navMistickets) {
                     cargarFragmento(new MisTickets(), false);
                 } else if (itemID == R.id.navHistorial) {

@@ -3,6 +3,7 @@ package android.danyk.Actividades;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.danyk.DAO.TicketDAO;
+import android.danyk.DAO.UserDAO;
 import android.danyk.R;
 import android.danyk.modelo.Ticket;
 import android.os.Bundle;
@@ -34,11 +35,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class actividad_editarTicket extends AppCompatActivity {
-    String usuarioActualId = FirebaseAuth.getInstance().getCurrentUser().getUid();
     Button botonCancelar, botonConfirmar;
-    DatabaseReference ticketsEditadosRef;
     DatabaseReference ticketsRef;
-    TextView tituloPreview, estadoPreview, prioridadPreview, descripcionPreview, notasPreview;
+    TextView tituloPreview, estadoPreview, prioridadPreview, descripcionPreview, notasPreview, creadoPorPreview;
     LinearLayout layoutVistaPreviaImagen;
 
     @SuppressLint("MissingInflatedId")
@@ -55,6 +54,7 @@ public class actividad_editarTicket extends AppCompatActivity {
         prioridadPreview = findViewById(R.id.prioridadTextViewPreview);
         descripcionPreview = findViewById(R.id.descripcionTextViewPreview);
         notasPreview = findViewById(R.id.notasTextViewPreview);
+        creadoPorPreview = findViewById(R.id.creadoPorTextViewPreview);
 
         Ticket ticket = getIntent().getParcelableExtra("ticket");
         if (ticket != null) {
@@ -62,6 +62,8 @@ public class actividad_editarTicket extends AppCompatActivity {
             estadoPreview.setText(ticket.getEstado());
             prioridadPreview.setText(ticket.getPrioridad());
             descripcionPreview.setText(ticket.getDescripcion());
+            String creadoPor = getIntent().getStringExtra("creadoPor");
+            creadoPorPreview.setText(creadoPor);
         }
         layoutVistaPreviaImagen.removeAllViews();
 
@@ -133,13 +135,16 @@ public class actividad_editarTicket extends AppCompatActivity {
     }
 
     private void insertarDatos(Ticket ticket) {
-        String Titulo, Estado, Prioridad, Descripcion, Notas;
+        String Titulo, Estado, Prioridad, Descripcion, Notas, CreadoPor;
         Titulo = String.valueOf(tituloPreview.getText());
         Estado = "Finalizado";
         Descripcion = String.valueOf(descripcionPreview.getText());
         Notas = String.valueOf(notasPreview.getText());
         Prioridad = prioridadPreview.getText().toString();
+        CreadoPor = creadoPorPreview.getText().toString();
 
+        UserDAO userDAO = new UserDAO();
+        String resueltoPor = userDAO.getCurrentUser().getCorreo();
         Map<String, Object> ticketValues = new HashMap<>();
         ticketValues.put("titulo", Titulo);
         ticketValues.put("estado", Estado);
@@ -147,8 +152,9 @@ public class actividad_editarTicket extends AppCompatActivity {
         ticketValues.put("descripcion", Descripcion);
         ticketValues.put("notas_añadidas", Notas);
         ticketValues.put("idTicket", ticket.getIdTicket());
-        ticketValues.put("resuelto_por", usuarioActualId);
+        ticketValues.put("resuelto_por", resueltoPor);
         ticketValues.put("finalizado", true);
+        ticketValues.put("creado_por", CreadoPor);
 
         if (ticket.getImageUris() != null && !ticket.getImageUris().isEmpty()) {
             Map<String, String> imagenes = new HashMap<>();
@@ -180,7 +186,6 @@ public class actividad_editarTicket extends AppCompatActivity {
     }
 
     private void moverTicketAFinalizados(String ticketId, Map<String, Object> ticketValues) {
-        // Agrega el ticket actualizado a "tickets_finalizados"
         DatabaseReference ticketsFinalizadosRef = FirebaseDatabase.getInstance().getReference("ticket").push();
         ticketsFinalizadosRef.setValue(ticketValues)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

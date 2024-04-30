@@ -87,11 +87,13 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
                     LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
                     Button botonEditar = dialogView.findViewById(R.id.boton_editarTicket);
                     ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
+                    TextView creadoPor = dialogView.findViewById(R.id.creadoPorTextViewPreview);
 
                     tituloPreview.setText(tickets.getTitulo());
                     estadoPreview.setText(tickets.getEstado());
                     prioridadPreview.setText(tickets.getPrioridad());
                     descripcionPreview.setText(tickets.getDescripcion());
+                    creadoPor.setText(tickets.getCreadoPor());
 
                     layoutVistaPreviaImagen.removeAllViews();
 
@@ -129,6 +131,7 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
                             Ticket ticket = datos.get(position);
                             Intent intent = new Intent(context, actividad_editarTicket.class);
                             intent.putExtra("ticket", ticket);
+                            intent.putExtra("creadoPor", tickets.getCreadoPor());
                             context.startActivity(intent);
                         }
                     });
@@ -140,12 +143,9 @@ public class ListaAdaptador extends RecyclerView.Adapter<ListaAdaptador.ViewHold
                 public void onClick(View v) {
                     Ticket ticket = datos.get(position);
                     notifyItemChanged(position);
-
-                    // Obtener el usuario actual
                     UserDAO userDAO = new UserDAO();
                     String currentUser = userDAO.getUserID();
                     TicketDAO ticketDAO = new TicketDAO();
-
                     ticketDAO.agregarTicketGuardado(currentUser,ticket.getIdTicket());
 
                 }

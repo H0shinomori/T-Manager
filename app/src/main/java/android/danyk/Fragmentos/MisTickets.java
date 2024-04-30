@@ -72,8 +72,10 @@ public class MisTickets extends Fragment {
         });
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
-                R.array.filters, android.R.layout.simple_spinner_item);
+                R.array.filters, R.layout.spinner_dropdown);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner spinnerFilter = view.findViewById(R.id.spinnerFilter);
+        spinnerFilter.setBackgroundResource(R.drawable.spinner_custom);
         spinnerFilter.setAdapter(adapter);
         spinnerFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
