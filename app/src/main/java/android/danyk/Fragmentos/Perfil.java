@@ -21,8 +21,6 @@ public class Perfil extends Fragment {
 
     TextView nombreUsuarioTextView, emailTextView, rolUsuarioTextView;
     Button boton_cerrar_sesion;
-    String rolUsuario;
-
 
     @SuppressLint("MissingInflatedId")
     @Override

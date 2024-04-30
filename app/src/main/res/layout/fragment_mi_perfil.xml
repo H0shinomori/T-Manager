@@ -43,11 +43,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:gravity="center"
             android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
                     style="@style/fuenteNegrita"
@@ -69,6 +71,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
+                android:orientation="vertical"
                 android:layout_height="wrap_content">
 
                 <TextView
@@ -106,6 +109,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
+                    android:text="Usuario"
                     android:layout_marginLeft="5dp"
                     android:layout_marginBottom="5dp"
                     android:textSize="18sp" />

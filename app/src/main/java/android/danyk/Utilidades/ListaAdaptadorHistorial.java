@@ -57,10 +57,10 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Ticket tickets = datosFiltrados.get(position);
-
         holder.titulo.setText(tickets.getTitulo());
         holder.estado.setText(tickets.getEstado());
         holder.prioridad.setText(tickets.getPrioridad());
+
 
         if (tickets.getPrioridad().equals("Alta")) {
             int color = ContextCompat.getColor(context, R.color.color_prioridad_alta);
@@ -112,11 +112,9 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 AlertDialog dialog = builder.create();
-                assert context != null;
                 Drawable background = ContextCompat.getDrawable(context, R.drawable.redondear_bordes);
                 Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(background);
                 dialog.setView(dialogView);
-
                 dialog.show();
             }
         });

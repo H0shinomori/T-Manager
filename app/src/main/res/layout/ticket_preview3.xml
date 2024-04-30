@@ -116,6 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fadeScrollbars="false"
+            android:gravity="top"
             android:scrollbarThumbHorizontal="@color/azulito"
             android:scrollbarTrackHorizontal="@color/white">
 
@@ -123,8 +124,7 @@
                 android:id="@+id/layout_vistaPreviaImagen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="top"/>
+                android:orientation="horizontal" />
         </HorizontalScrollView>
 
     </LinearLayout>

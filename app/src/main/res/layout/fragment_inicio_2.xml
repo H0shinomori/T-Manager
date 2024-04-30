@@ -29,12 +29,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    style="@style/fuenteNegrita"
                     android:layout_marginStart="10dp"
                     android:text="Hola"
                     android:textColor="@color/white"
                     android:textSize="25sp" />
 
                 <TextView
+                    style="@style/fuenteNegrita"
                     android:id="@+id/nombre_usuario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

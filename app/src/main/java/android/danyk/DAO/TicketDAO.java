@@ -36,9 +36,9 @@ public class TicketDAO {
         userTicketIdMap = new HashMap<>();
     }
 
-    public void insertarTicket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris, boolean finalizado, OnCompleteListener<Void> onCompleteListener) {
+    public void insertarTicket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris, boolean finalizado, String creadoPor, OnCompleteListener<Void> onCompleteListener) {
         String idTicket = generateRandomId();
-        Ticket ticket = new Ticket(titulo, estado, prioridad, descripcion, imageUris, idTicket, finalizado);
+        Ticket ticket = new Ticket(titulo, estado, prioridad, descripcion, imageUris, idTicket, finalizado, creadoPor);
         String id = databaseReference.child("ticket").push().getKey();
         assert id != null;
         databaseReference.child("ticket").child(id).setValue(ticket).addOnCompleteListener(onCompleteListener);

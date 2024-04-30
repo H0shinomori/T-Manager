@@ -19,17 +19,20 @@ public class Ticket implements Parcelable {
     private boolean finalizado;
     private String hechoPor;
     private String notas;
+    private String creadoPor;
 
     public Ticket() {
     }
 
-    public Ticket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris, String idTicket, boolean finalizado) {        this.titulo = titulo;
+    public Ticket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris, String idTicket, boolean finalizado, String creadoPor) {
+        this.titulo = titulo;
         this.estado = estado;
         this.prioridad = prioridad;
         this.descripcion = descripcion;
         this.imageUris = imageUris;
         this.idTicket = idTicket;
         this.finalizado = finalizado;
+        this.creadoPor = creadoPor;
     }
     public Ticket(String titulo, String estado, String prioridad, String descripcion, List<String> imageUris, String idTicket, boolean finalizado, String hechoPor, String notas) {
         this.titulo = titulo;
@@ -139,6 +142,14 @@ public class Ticket implements Parcelable {
 
     public void setNotas(String notas) {
         this.notas = notas;
+    }
+
+    public String getCreadoPor() {
+        return creadoPor;
+    }
+
+    public void setCreadoPor(String creadoPor) {
+        this.creadoPor = creadoPor;
     }
 
     @Override

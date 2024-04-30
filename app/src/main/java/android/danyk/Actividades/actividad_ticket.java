@@ -73,6 +73,7 @@ public class actividad_ticket extends AppCompatActivity {
     File photoFile;
     private boolean finalizado = false;
     private ScrollView scrollView;
+    private String creadoPor;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -304,6 +305,8 @@ public class actividad_ticket extends AppCompatActivity {
         String Titulo, Prioridad, Descripcion;
         Titulo = String.valueOf(titulo.getText());
         Descripcion = String.valueOf(descripcion.getText());
+        UserDAO user = new UserDAO();
+        creadoPor = String.valueOf(user.getCurrentUser().getCorreo());
 
         int radioButtonId = prioridad.getCheckedRadioButtonId();
 
@@ -314,7 +317,7 @@ public class actividad_ticket extends AppCompatActivity {
             String estadoFinalizado = "Pendiente";
             estado.setText(estadoFinalizado);
             TicketDAO ticketDAO = new TicketDAO();
-            ticketDAO.insertarTicket(Titulo, estadoFinalizado, Prioridad, Descripcion, imageUrls, finalizado, new OnCompleteListener<Void>() {
+            ticketDAO.insertarTicket(Titulo, estadoFinalizado, Prioridad, Descripcion, imageUrls, finalizado, creadoPor, new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
@@ -325,6 +328,7 @@ public class actividad_ticket extends AppCompatActivity {
                     }
                 }
             });
+
         }
     }
 

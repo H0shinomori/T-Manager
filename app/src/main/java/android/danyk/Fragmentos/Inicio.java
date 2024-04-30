@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,6 +50,7 @@ public class Inicio extends Fragment {
     List<String> idsTicketsGuardados;
     UserDAO userDAO;
     String rolUsuario;
+    LinearLayout drawerContainer;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -81,6 +83,13 @@ public class Inicio extends Fragment {
         dayOfWeekTextView.setText(dayOfWeek.toUpperCase(Locale.getDefault()));
         dateTextView.setText(date);
 
+        drawerContainer = view.findViewById(R.id.drawer_content);
+        drawerContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Ignora los clicks en el drawer
+            }
+        });
 
         botonPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
