@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -77,7 +78,7 @@ public class actividad_menu extends AppCompatActivity {
                         }
                     }
                 } else if (itemID == R.id.navGuardados) {
-                    cargarFragmento(new Guardados(), false);
+                    // No hagas nada aquí para que el ítem "Guardados" no se procese para usuarios normales
                 } else if (itemID == R.id.navMistickets) {
                     cargarFragmento(new MisTickets(), false);
                 } else if (itemID == R.id.navHistorial) {
@@ -96,6 +97,7 @@ public class actividad_menu extends AppCompatActivity {
                 return true;
             }
         });
+
     }
 
     private void obtenerRolUsuarioDesdeBaseDeDatos() {
@@ -112,8 +114,11 @@ public class actividad_menu extends AppCompatActivity {
                 if (document.exists()) {
                     rolUsuario = document.getString("rol");
                     cargarFragmentoSegunRol();
-                    cambiarIconoPerfil();
-                    cambiarTextoPerfil();
+                    if (rolUsuario != null && rolUsuario.equals("Usuario")) {
+                        eliminarIconoYTexto(R.id.navGuardados);
+                        eliminarIconoYTexto(R.id.navHistorial);
+                        ajustarEspaciosVacios();
+                    }
                 } else {
                     Toast.makeText(actividad_menu.this, "Error", Toast.LENGTH_SHORT).show();
                 }
@@ -150,17 +155,31 @@ public class actividad_menu extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private void cambiarIconoPerfil() {
-        if (rolUsuario != null && rolUsuario.equals("Usuario")) {
-            MenuItem historialItem = barraNavegacion.getMenu().findItem(R.id.navHistorial);
-            historialItem.setIcon(R.drawable.ic_perfil2);
-        }
+
+
+    // Método para eliminar un ícono y texto de un elemento del menú
+    private void eliminarIconoYTexto(int itemId) {
+        Menu menu = barraNavegacion.getMenu();
+        MenuItem item = menu.findItem(itemId);
+        item.setVisible(false); // Oculta el ítem del menú
     }
 
-    private void cambiarTextoPerfil() {
+    private void ajustarEspaciosVacios() {
+        // Calcula el tamaño de los espacios vacíos dependiendo del rol del usuario
+        int espacioVacioIzquierda = getResources().getDimensionPixelSize(R.dimen.espacio_vacio_izquierda);
+        int espacioVacioDerecha = getResources().getDimensionPixelSize(R.dimen.espacio_vacio_derecha);
+
         if (rolUsuario != null && rolUsuario.equals("Usuario")) {
-            MenuItem historialItem = barraNavegacion.getMenu().findItem(R.id.navHistorial);
-            historialItem.setTitle("Mi Perfil");
+            // Ajusta los espacios vacíos adicionales si es necesario
+            espacioVacioIzquierda += getResources().getDimensionPixelSize(R.dimen.espacio_extra_vacio_izquierda_usuario);
+            espacioVacioDerecha += getResources().getDimensionPixelSize(R.dimen.espacio_extra_vacio_derecha_usuario);
         }
+        int margen = espacioVacioIzquierda + espacioVacioDerecha;
+        // Ajusta el margen izquierdo del BottomNavigationView para centrar el ícono del inicio
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) barraNavegacion.getLayoutParams();
+        layoutParams.leftMargin = margen;
+        // Ajusta el margen derecho del BottomNavigationView para agregar espacio después del ícono del inicio
+        barraNavegacion.setLayoutParams(layoutParams);
     }
+
 }

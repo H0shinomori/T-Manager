@@ -5,4 +5,8 @@
     <dimen name="appbar_padding">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="espacio_vacio_izquierda">10dp</dimen>
+    <dimen name="espacio_extra_vacio_izquierda_usuario">5dp</dimen>
+    <dimen name="espacio_vacio_derecha">5dp</dimen>
+    <dimen name="espacio_extra_vacio_derecha_usuario">0dp</dimen>
 </resources>

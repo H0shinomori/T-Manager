@@ -129,14 +129,12 @@ public class Inicio extends Fragment {
         }
         TextView nombreUsuarioDrawer = view.findViewById(R.id.nombreUsuarioDrawer);
         TextView emailDrawer = view.findViewById(R.id.emailDrawer);
-        TextView rolUsuarioDrawer = view.findViewById(R.id.rolUsuarioDrawer);
 
         UserDAO userDAO = new UserDAO();
         User currentUser = userDAO.getCurrentUser();
         if (currentUser != null) {
             String nombre = currentUser.getNombre();
             String correo = currentUser.getCorreo();
-            String rol = rolUsuario;
 
             if (nombre != null) {
                 mostrarNombre.setText(nombre);
@@ -144,9 +142,6 @@ public class Inicio extends Fragment {
             }
             if (correo != null) {
                 emailDrawer.setText(correo);
-            }
-            if (rol != null) {
-                rolUsuarioDrawer.setText(rol);
             }
 
             boton_cerrar_sesion.setOnClickListener(new View.OnClickListener() {
