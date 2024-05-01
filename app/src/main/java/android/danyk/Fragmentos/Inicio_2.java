@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Inicio_2 extends Fragment {
     private ImageButton boton_perfil;
@@ -135,10 +136,11 @@ public class Inicio_2 extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int countPendiente = 0;
                 int countFinalizado = 0;
+                UserDAO userDAO = new UserDAO();
 
                 for (DataSnapshot dt : snapshot.getChildren()) {
                     Ticket ticket = dt.getValue(Ticket.class);
-                    if (ticket != null) {
+                    if (ticket != null && Objects.equals(ticket.getCreadoPor(), userDAO.getCurrentUser().getCorreo())) {
                         if (ticket.getEstado().equals("Pendiente")) {
                             countPendiente++;
                         } else if (ticket.getEstado().equals("Finalizado")) {

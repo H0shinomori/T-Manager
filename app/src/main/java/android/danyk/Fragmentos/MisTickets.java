@@ -4,6 +4,7 @@ import android.danyk.DAO.UserDAO;
 import android.danyk.R;
 import android.danyk.Utilidades.ListaAdaptadorMisTickets;
 import android.danyk.Utilidades.ListaAdaptadorTicketsGuardados;
+import android.danyk.dbManager.FirebaseSingleton;
 import android.danyk.modelo.Ticket;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,7 +30,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class MisTickets extends Fragment {
@@ -105,6 +113,7 @@ public class MisTickets extends Fragment {
                     idsMisTickets.add(idTicket);
                 }
                 DatabaseReference ticketsReference = FirebaseDatabase.getInstance().getReference("ticket");
+
                 ticketsReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

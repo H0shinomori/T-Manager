@@ -150,18 +150,18 @@ public class actividad_editarTicket extends AppCompatActivity {
         ticketValues.put("estado", Estado);
         ticketValues.put("prioridad", Prioridad);
         ticketValues.put("descripcion", Descripcion);
-        ticketValues.put("notas_añadidas", Notas);
+        ticketValues.put("notas", Notas);
         ticketValues.put("idTicket", ticket.getIdTicket());
-        ticketValues.put("resuelto_por", resueltoPor);
+        ticketValues.put("hechoPor", resueltoPor);
         ticketValues.put("finalizado", true);
-        ticketValues.put("creado_por", CreadoPor);
+        ticketValues.put("creadoPor", CreadoPor);
 
         if (ticket.getImageUris() != null && !ticket.getImageUris().isEmpty()) {
             Map<String, String> imagenes = new HashMap<>();
             for (int i = 0; i < ticket.getImageUris().size(); i++) {
                 imagenes.put(""+ i, ticket.getImageUris().get(i));
             }
-            ticketValues.put("imagenes", imagenes);
+            ticketValues.put("imageUris", imagenes);
         }
 
         String ticketId = ticket.getIdTicket();

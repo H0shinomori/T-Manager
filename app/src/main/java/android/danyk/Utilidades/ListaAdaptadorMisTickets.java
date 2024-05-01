@@ -6,8 +6,10 @@ import android.content.Context;
 import android.danyk.DAO.TicketDAO;
 import android.danyk.DAO.UserDAO;
 import android.danyk.R;
+import android.danyk.dbManager.FirebaseSingleton;
 import android.danyk.modelo.Ticket;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
@@ -116,6 +122,7 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
         ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
         TextView creadoPor = dialogView.findViewById(R.id.creadoPorTextViewPreview);
         TextView completadoPor = dialogView.findViewById(R.id.completadoPorTextViewPreview);
+        TextView notas = dialogView.findViewById(R.id.notasTextViewPreview);
 
         tituloPreview.setText(ticket.getTitulo());
         estadoPreview.setText(ticket.getEstado());
@@ -123,6 +130,7 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
         descripcionPreview.setText(ticket.getDescripcion());
         creadoPor.setText(ticket.getCreadoPor());
         completadoPor.setText(ticket.getHechoPor());
+        notas.setText(ticket.getNotas());
 
         layoutVistaPreviaImagen.removeAllViews();
 
