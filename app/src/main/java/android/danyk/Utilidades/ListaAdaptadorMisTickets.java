@@ -122,7 +122,7 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
         ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
         TextView creadoPor = dialogView.findViewById(R.id.creadoPorTextViewPreview);
         TextView completadoPor = dialogView.findViewById(R.id.completadoPorTextViewPreview);
-        TextView notas = dialogView.findViewById(R.id.notasTextViewPreview);
+        TextView notasView = dialogView.findViewById(R.id.notasTextViewPreview);
 
         tituloPreview.setText(ticket.getTitulo());
         estadoPreview.setText(ticket.getEstado());
@@ -130,7 +130,11 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
         descripcionPreview.setText(ticket.getDescripcion());
         creadoPor.setText(ticket.getCreadoPor());
         completadoPor.setText(ticket.getHechoPor());
-        notas.setText(ticket.getNotas());
+
+        String notas = ticket.getNotas();
+        if (notas != null) {
+            notasView.setText(ticket.getNotas());
+        }
 
         layoutVistaPreviaImagen.removeAllViews();
 
