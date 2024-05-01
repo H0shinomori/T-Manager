@@ -213,24 +213,56 @@
                     android:textSize="18sp" />
             </LinearLayout>
             <Button
-                android:id="@+id/cambiar_contaseña_tecnico"
-                style="@style/fuenteNegrita"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                app:backgroundTint="#1a2242"
-                android:text="Cambiar Contraseña tecnico" />
-
-            <Button
                 android:id="@+id/cerrar_sesionDrawer"
                 style="@style/fuenteNegrita"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                app:backgroundTint="#1a2242"
+                android:text="Cerrar Sesion" />
+            <TextView
+                android:id="@+id/text_contrasena_tecnico"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contraseña: "
+                android:textColor="#1a2242"
+                style="@style/fuenteNegrita"
+                android:layout_gravity="center"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/ver_pass_tecnico"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="ver contraseña de técnico"
+                app:backgroundTint="#1a2242"
+                style="@style/fuenteNegrita"/>
+            <Button
+                android:id="@+id/cambiar_contasena_tecnico"
+                style="@style/fuenteNegrita"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 app:backgroundTint="#1a2242"
                 android:layout_gravity="center"
-                android:text="Cerrar Sesion" />
+                android:text="Cambiar Contraseña tecnico" />
+
+            <EditText
+                android:id="@+id/contrasena_tecnico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/enviar_contrasena_tecnico"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Confirmar"
+                style="@style/fuenteNegrita"
+                android:visibility="invisible"/>
         </LinearLayout>
 
     </LinearLayout>

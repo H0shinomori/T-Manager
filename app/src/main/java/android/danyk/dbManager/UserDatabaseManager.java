@@ -44,9 +44,7 @@ public class UserDatabaseManager {
         configRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    configRef.child(PASSWORD_KEY).setValue(password);
-                }
+                configRef.child(PASSWORD_KEY).setValue(password);
             }
 
             @Override
@@ -56,24 +54,33 @@ public class UserDatabaseManager {
         });
     }
 
-    public static String obtenerPasswordTecnico() {
+    public static void obtenerPasswordTecnico(OnPasswordFetchListener listener) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference configRef = database.getReference().child(CONFIG_NODE).child(PASSWORD_KEY);
 
-        try {
-            DataSnapshot dataSnapshot = Tasks.await(configRef.get());
-            if (dataSnapshot.exists()) {
-                return dataSnapshot.getValue(String.class);
-            } else {
-                // En caso de que la contraseña del técnico no esté configurada
-                return null;
+        configRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String password = dataSnapshot.getValue(String.class);
+                    listener.onPasswordFetched(password);
+                } else {
+                    listener.onPasswordFetchFailed("La contraseña del técnico no está configurada.");
+                }
             }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            // Manejar la excepción según sea necesario
-            return null;
-        }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onPasswordFetchFailed("Error al obtener la contraseña del técnico: " + databaseError.getMessage());
+            }
+        });
     }
+
+    public interface OnPasswordFetchListener {
+        void onPasswordFetched(String password);
+        void onPasswordFetchFailed(String errorMessage);
+    }
+
 
 
 }

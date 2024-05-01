@@ -4,6 +4,7 @@ package android.danyk.Actividades;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.danyk.R;
+import android.danyk.dbManager.UserDatabaseManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -91,11 +92,23 @@ public class actividad_registro extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().equals(CONTRASEÑA_TECNICO)) {
-                    contraseñaCorrecta = true;
-                } else {
-                    contraseñaCorrecta = false;
-                }
+                UserDatabaseManager.obtenerPasswordTecnico(new UserDatabaseManager.OnPasswordFetchListener() {
+                    @Override
+                    public void onPasswordFetched(String password) {
+                        // Aquí manejas la contraseña obtenida
+                        if (password != null) {
+                            if (s.toString().equals(password)) {
+                                contraseñaCorrecta = true;
+                            } else {
+                                contraseñaCorrecta = false;
+                            }
+                        } else {
+                        }
+                    }
+                    @Override
+                    public void onPasswordFetchFailed(String errorMessage) {
+                    }
+                });
             }
         });
 
