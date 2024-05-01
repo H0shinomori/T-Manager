@@ -159,7 +159,7 @@ public class actividad_editarTicket extends AppCompatActivity {
         if (ticket.getImageUris() != null && !ticket.getImageUris().isEmpty()) {
             Map<String, String> imagenes = new HashMap<>();
             for (int i = 0; i < ticket.getImageUris().size(); i++) {
-                imagenes.put("imagenUrl" + i, ticket.getImageUris().get(i));
+                imagenes.put(""+ i, ticket.getImageUris().get(i));
             }
             ticketValues.put("imagenes", imagenes);
         }

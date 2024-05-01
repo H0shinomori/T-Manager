@@ -68,9 +68,7 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
                 holder.prioridad.setTextColor(color);
             }
 
-            // Verificar el estado del ticket y la selección del filtro
             if (ticket.getEstado().equals("Finalizado") && selectedFilter.equals("Finalizados")) {
-                // Si el ticket está finalizado y el filtro es "Finalizados", usar la plantilla ticket_preview2
                 holder.cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -78,7 +76,6 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
                     }
                 });
             } else {
-                // En cualquier otro caso, usar la plantilla ticket_preview3
                 holder.cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -100,8 +97,9 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
     }
     public void setSelectedFilter(String selectedFilter) {
         this.selectedFilter = selectedFilter;
-        notifyDataSetChanged(); // Notificar al adaptador que los datos han cambiado
+        notifyDataSetChanged();
     }
+    @SuppressLint("InflateParams")
     private void mostrarInformacionTicket(Ticket ticket, boolean esFinalizado) {
         View dialogView;
         if (esFinalizado) {
@@ -117,12 +115,14 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
         LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
         ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
         TextView creadoPor = dialogView.findViewById(R.id.creadoPorTextViewPreview);
+        TextView completadoPor = dialogView.findViewById(R.id.completadoPorTextViewPreview);
 
         tituloPreview.setText(ticket.getTitulo());
         estadoPreview.setText(ticket.getEstado());
         prioridadPreview.setText(ticket.getPrioridad());
         descripcionPreview.setText(ticket.getDescripcion());
         creadoPor.setText(ticket.getCreadoPor());
+        completadoPor.setText(ticket.getHechoPor());
 
         layoutVistaPreviaImagen.removeAllViews();
 
@@ -154,6 +154,7 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
             }
         });
     }
+
 
     @Override
     public int getItemCount() {

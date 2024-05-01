@@ -33,18 +33,19 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptadorHistorial.ViewHolder> {
-    private List<Ticket> datos;
-    private List<Ticket> datosFiltrados;
+    private final List<Ticket> datos;
+    private final List<Ticket> datosFiltrados;
     private final LayoutInflater inflater;
     private final Context context;
+    private List<String> idsTickets;
 
 
-
-    public ListaAdaptadorHistorial(List<Ticket> itemList, Fragment context) {
+    public ListaAdaptadorHistorial(List<Ticket> itemList, Fragment context,List<String> idsTickets) {
         this.inflater = LayoutInflater.from(context.getContext());
         this.context = context.getContext();
         this.datos = itemList;
         this.datosFiltrados = new ArrayList<>(itemList);
+        this.idsTickets = idsTickets;
     }
 
     @NonNull
@@ -57,6 +58,7 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         Ticket tickets = datosFiltrados.get(position);
+
         holder.titulo.setText(tickets.getTitulo());
         holder.estado.setText(tickets.getEstado());
         holder.prioridad.setText(tickets.getPrioridad());
@@ -65,10 +67,10 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
         if (tickets.getPrioridad().equals("Alta")) {
             int color = ContextCompat.getColor(context, R.color.color_prioridad_alta);
             holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
-        } else if (tickets.getPrioridad().equals("Media")){
+        } else if (tickets.getPrioridad().equals("Media")) {
             int color = ContextCompat.getColor(context, R.color.color_prioridad_media);
             holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
-        }else if (tickets.getPrioridad().equals("Baja")) {
+        } else if (tickets.getPrioridad().equals("Baja")) {
             int color = ContextCompat.getColor(context, R.color.color_prioridad_baja);
             holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
         }
@@ -85,14 +87,16 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
                 TextView descripcionPreview = dialogView.findViewById(R.id.descripcionTextViewPreview);
                 LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
                 TextView notasPreview = dialogView.findViewById(R.id.notasTextViewPreview);
-                TextView completadoPorPreview = dialogView.findViewById(R.id.completadoPorTextViewPreview);
                 ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
+                TextView creadoPor = dialogView.findViewById(R.id.creadoPorTextViewPreview);
+                TextView completadoPorPreview = dialogView.findViewById(R.id.completadoPorTextViewPreview);
 
                 tituloPreview.setText(tickets.getTitulo());
                 estadoPreview.setText(tickets.getEstado());
                 prioridadPreview.setText(tickets.getPrioridad());
                 descripcionPreview.setText(tickets.getDescripcion());
                 notasPreview.setText(tickets.getNotas());
+                creadoPor.setText(tickets.getCreadoPor());
                 completadoPorPreview.setText(tickets.getHechoPor());
 
                 layoutVistaPreviaImagen.removeAllViews();
@@ -105,7 +109,7 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
                                 dipToPixels(context, 350),
                                 dipToPixels(context, 500)
                         );
-                        layoutParams.setMargins(10, 0, 10, 0);
+                        layoutParams.setMargins(10, 5, 10, 0);
                         imageView.setLayoutParams(layoutParams);
                         Glide.with(context).load(imageUrl).into(imageView);
                         layoutVistaPreviaImagen.addView(imageView);
@@ -113,6 +117,7 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 AlertDialog dialog = builder.create();
+                assert context != null;
                 Drawable background = ContextCompat.getDrawable(context, R.drawable.redondear_bordes);
                 Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(background);
                 dialog.setView(dialogView);
@@ -125,9 +130,9 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
                 });
             }
         });
-
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void filtrarPorTitulo(String texto) {
         datosFiltrados.clear();
         if (!TextUtils.isEmpty(texto)) {
@@ -167,6 +172,3 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
         }
     }
 }
-
-
-

@@ -1,5 +1,6 @@
 package android.danyk.Fragmentos;
 
+import android.annotation.SuppressLint;
 import android.danyk.DAO.UserDAO;
 import android.danyk.R;
 import android.danyk.Utilidades.ListaAdaptadorHistorial;
@@ -45,7 +46,7 @@ public class Historial extends Fragment {
         elementos = new ArrayList<>();
         idsTicketsHistorial = new ArrayList<>();
 
-        listaAdaptador = new ListaAdaptadorHistorial(elementos, this);
+        listaAdaptador = new ListaAdaptadorHistorial(elementos, this, idsTicketsHistorial);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(listaAdaptador);
@@ -68,6 +69,7 @@ public class Historial extends Fragment {
         });
 
         databaseReference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 elementos.clear();
