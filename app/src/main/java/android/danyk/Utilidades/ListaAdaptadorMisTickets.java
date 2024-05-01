@@ -3,8 +3,6 @@ package android.danyk.Utilidades;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.danyk.Actividades.actividad_editarTicket;
 import android.danyk.DAO.TicketDAO;
 import android.danyk.DAO.UserDAO;
 import android.danyk.R;
@@ -13,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,19 +24,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
-import java.util.Objects;
+
 public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptadorMisTickets.ViewHolder> {
     private List<Ticket> datos;
     private final LayoutInflater inflater;
     private final Context context;
     private final List<String> idsMisTickets;
+    private String selectedFilter;
 
-    public ListaAdaptadorMisTickets(List<Ticket> itemList, Context context, List<String> idsMisTickets) {
+    public ListaAdaptadorMisTickets(List<Ticket> itemList, Context context, List<String> idsMisTickets, String selectedFilter) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.datos = itemList;
         this.idsMisTickets = idsMisTickets;
+        this.selectedFilter = selectedFilter != null ? selectedFilter : "";
     }
+
 
     @NonNull
     @Override
@@ -59,83 +59,107 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
 
             if (ticket.getPrioridad().equals("Alta")) {
                 int color = ContextCompat.getColor(context, R.color.color_prioridad_alta);
-                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
-            } else if (ticket.getPrioridad().equals("Media")){
+                holder.prioridad.setTextColor(color);
+            } else if (ticket.getPrioridad().equals("Media")) {
                 int color = ContextCompat.getColor(context, R.color.color_prioridad_media);
-                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
-            }else if (ticket.getPrioridad().equals("Baja")) {
+                holder.prioridad.setTextColor(color);
+            } else if (ticket.getPrioridad().equals("Baja")) {
                 int color = ContextCompat.getColor(context, R.color.color_prioridad_baja);
-                holder.prioridad.setTextColor(Integer.parseInt(String.valueOf(color)));
+                holder.prioridad.setTextColor(color);
             }
 
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
-                @SuppressLint({"MissingInflatedId", "LocalSuppress"})
-
-                @Override
-                public void onClick(View v) {
-                    View dialogView = inflater.inflate(R.layout.ticket_preview3, null);
-                    TextView tituloPreview = dialogView.findViewById(R.id.tituloTextViewPreview);
-                    TextView estadoPreview = dialogView.findViewById(R.id.estadoTextViewPreview);
-                    TextView prioridadPreview = dialogView.findViewById(R.id.prioridadTextViewPreview);
-                    TextView descripcionPreview = dialogView.findViewById(R.id.descripcionTextViewPreview);
-                    LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
-                    ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
-
-                    tituloPreview.setText(ticket.getTitulo());
-                    estadoPreview.setText(ticket.getEstado());
-                    prioridadPreview.setText(ticket.getPrioridad());
-                    descripcionPreview.setText(ticket.getDescripcion());
-
-                    layoutVistaPreviaImagen.removeAllViews();
-
-                    if (ticket.getImageUris() != null && !ticket.getImageUris().isEmpty()) {
-                        for (String imageUrl : ticket.getImageUris()) {
-                            ImageView imageView = new ImageView(context);
-                            assert context != null;
-                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                                    dipToPixels(context, 350),
-                                    dipToPixels(context, 500)
-                            );
-                            layoutParams.setMargins(10, 0, 10, 0);
-                            imageView.setLayoutParams(layoutParams);
-                            Glide.with(context).load(imageUrl).into(imageView);
-                            layoutVistaPreviaImagen.addView(imageView);
-                        }
+            // Verificar el estado del ticket y la selección del filtro
+            if (ticket.getEstado().equals("Finalizado") && selectedFilter.equals("Finalizados")) {
+                // Si el ticket está finalizado y el filtro es "Finalizados", usar la plantilla ticket_preview2
+                holder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mostrarInformacionTicket(ticket, true);
                     }
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    AlertDialog dialog = builder.create();
-                    assert context != null;
-                    Drawable background = ContextCompat.getDrawable(context, R.drawable.redondear_bordes);
-                    Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(background);
-                    dialog.setView(dialogView);
-                    dialog.show();
+                });
+            } else {
+                // En cualquier otro caso, usar la plantilla ticket_preview3
+                holder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mostrarInformacionTicket(ticket, false);
+                    }
+                });
+            }
 
-                    botonCerrarDialog.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-                        }
-                    });
-                }
-            });
             holder.iconoGuardado.setImageResource(R.drawable.eliminar_ticket);
             holder.iconoGuardado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     UserDAO userDAO = new UserDAO();
                     TicketDAO ticketDAO = new TicketDAO();
-                    ticketDAO.eliminarMiTicket(userDAO.getUserID(),ticket.getIdTicket());
+                    ticketDAO.eliminarMiTicket(userDAO.getUserID(), ticket.getIdTicket());
                 }
             });
-
-
         }
+    }
+    public void setSelectedFilter(String selectedFilter) {
+        this.selectedFilter = selectedFilter;
+        notifyDataSetChanged(); // Notificar al adaptador que los datos han cambiado
+    }
+    private void mostrarInformacionTicket(Ticket ticket, boolean esFinalizado) {
+        View dialogView;
+        if (esFinalizado) {
+            dialogView = inflater.inflate(R.layout.ticket_preview2, null);
+        } else {
+            dialogView = inflater.inflate(R.layout.ticket_preview3, null);
+        }
+
+        TextView tituloPreview = dialogView.findViewById(R.id.tituloTextViewPreview);
+        TextView estadoPreview = dialogView.findViewById(R.id.estadoTextViewPreview);
+        TextView prioridadPreview = dialogView.findViewById(R.id.prioridadTextViewPreview);
+        TextView descripcionPreview = dialogView.findViewById(R.id.descripcionTextViewPreview);
+        LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
+        ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
+        TextView creadoPor = dialogView.findViewById(R.id.creadoPorTextViewPreview);
+
+        tituloPreview.setText(ticket.getTitulo());
+        estadoPreview.setText(ticket.getEstado());
+        prioridadPreview.setText(ticket.getPrioridad());
+        descripcionPreview.setText(ticket.getDescripcion());
+        creadoPor.setText(ticket.getCreadoPor());
+
+        layoutVistaPreviaImagen.removeAllViews();
+
+        if (ticket.getImageUris() != null && !ticket.getImageUris().isEmpty()) {
+            for (String imageUrl : ticket.getImageUris()) {
+                ImageView imageView = new ImageView(context);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        dipToPixels(context, 350),
+                        dipToPixels(context, 500)
+                );
+                layoutParams.setMargins(10, 0, 10, 0);
+                imageView.setLayoutParams(layoutParams);
+                Glide.with(context).load(imageUrl).into(imageView);
+                layoutVistaPreviaImagen.addView(imageView);
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog dialog = builder.create();
+        Drawable background = ContextCompat.getDrawable(context, R.drawable.redondear_bordes);
+        dialog.getWindow().setBackgroundDrawable(background);
+        dialog.setView(dialogView);
+        dialog.show();
+
+        botonCerrarDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return datos.size();
     }
+
     private int dipToPixels(Context context, float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);

@@ -249,7 +249,7 @@
                 android:layout_gravity="center"
                 android:text="Cambiar Contraseña tecnico" />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/contrasena_tecnico"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -261,6 +261,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Confirmar"
+                app:backgroundTint="#1a2242"
                 style="@style/fuenteNegrita"
                 android:visibility="invisible"/>
         </LinearLayout>

@@ -85,7 +85,7 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
                 TextView descripcionPreview = dialogView.findViewById(R.id.descripcionTextViewPreview);
                 LinearLayout layoutVistaPreviaImagen = dialogView.findViewById(R.id.layout_vistaPreviaImagen);
                 TextView notasPreview = dialogView.findViewById(R.id.notasTextViewPreview);
-                TextView hechoPorPreview = dialogView.findViewById(R.id.hechoPorTextViewPreview);
+                TextView completadoPorPreview = dialogView.findViewById(R.id.completadoPorTextViewPreview);
                 ImageButton botonCerrarDialog = dialogView.findViewById(R.id.cerrar_dialog);
 
                 tituloPreview.setText(tickets.getTitulo());
@@ -93,7 +93,7 @@ public class ListaAdaptadorHistorial extends RecyclerView.Adapter<ListaAdaptador
                 prioridadPreview.setText(tickets.getPrioridad());
                 descripcionPreview.setText(tickets.getDescripcion());
                 notasPreview.setText(tickets.getNotas());
-                hechoPorPreview.setText(tickets.getHechoPor());
+                completadoPorPreview.setText(tickets.getHechoPor());
 
                 layoutVistaPreviaImagen.removeAllViews();
 

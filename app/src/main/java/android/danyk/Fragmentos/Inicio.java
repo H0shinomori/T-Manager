@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,7 +45,7 @@ public class Inicio extends Fragment {
     Button boton_cerrar_sesion, cambiar_contasena_tecnico,enviar_contrasena_tecnico,verPassTecnico;
     FirebaseAuth mAuth;
     TextView mostrarNombre, dayOfWeekTextView, dateTextView, contrasenaTecnicoView;
-    EditText contrasenaTecnico;
+    TextInputEditText contrasenaTecnico;
     List<Ticket> elementos;
     RecyclerView recyclerView;
     ListaAdaptador listaAdaptador;

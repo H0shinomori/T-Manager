@@ -44,11 +44,11 @@ public class MisTickets extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mis_tickets, container, false);
         recyclerView = view.findViewById(R.id.recycleViewMisTickets);
         spinnerFilter = view.findViewById(R.id.spinnerFilter);
-
+        selectedFilter = "Pendientes";
         elementos = new ArrayList<>();
         idsMisTickets = new ArrayList<>();
 
-        listaAdaptador = new ListaAdaptadorMisTickets(elementos, requireContext(), idsMisTickets);
+        listaAdaptador = new ListaAdaptadorMisTickets(elementos, requireContext(), idsMisTickets,selectedFilter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(listaAdaptador);
@@ -82,6 +82,7 @@ public class MisTickets extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 selectedFilter = getResources().getStringArray(R.array.filters)[position];
                 actualizarTicketsCreados();
+                listaAdaptador.setSelectedFilter(selectedFilter);
             }
 
             @Override

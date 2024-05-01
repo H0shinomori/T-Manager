@@ -75,7 +75,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/hechoPorTextViewPreview"
+                    android:id="@+id/completadoPorTextViewPreview"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
