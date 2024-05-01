@@ -133,7 +133,7 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
 
         String notas = ticket.getNotas();
         if (notas != null) {
-            notasView.setText(ticket.getNotas());
+            notasView.setText(notas);
         }
 
         layoutVistaPreviaImagen.removeAllViews();
