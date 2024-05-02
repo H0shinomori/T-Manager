@@ -36,7 +36,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fadeScrollbars="false"
-            android:scrollbarThumbVertical="@color/black">
+            android:padding="10dp"
+            android:scrollbarSize="3dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbarThumbVertical="@color/azul_marino"
+            android:scrollbarTrackVertical="@color/colorfondo1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -144,28 +148,26 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Descripción:"
+                    android:layout_marginTop="10dp"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:fadeScrollbars="false"
-                    android:scrollbars="none">
 
                     <TextView
                         android:id="@+id/descripcionTextViewPreview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
                         android:textSize="18sp" />
-                </ScrollView>
+
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:fadeScrollbars="false">
+                    android:fadeScrollbars="false"
+                    android:scrollbarSize="5dp"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbarThumbHorizontal="@color/azul_marino"
+                    android:scrollbarTrackHorizontal="@color/colorfondo1">
 
                     <LinearLayout
                         android:id="@+id/layout_vistaPreviaImagen"
@@ -173,7 +175,13 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal" />
                 </HorizontalScrollView>
-
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="-------------------------------------"
+                    android:textColor="@color/grey" />
                 <TextView
                     style="@style/fuenteNegrita"
                     android:layout_width="match_parent"

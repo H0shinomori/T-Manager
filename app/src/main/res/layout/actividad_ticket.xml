@@ -171,7 +171,11 @@
                 android:layout_width="match_parent"
                 android:fadeScrollbars="false"
                 android:padding="5dp"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:scrollbarSize="3dp"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbarThumbVertical="@color/azul_marino"
+                android:scrollbarTrackVertical="@color/colorfondo1">
 
                 <LinearLayout
                     android:id="@+id/linear_layout_vista_previa"

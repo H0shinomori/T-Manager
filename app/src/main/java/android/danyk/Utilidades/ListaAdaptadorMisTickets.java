@@ -101,10 +101,12 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
             });
         }
     }
+
     public void setSelectedFilter(String selectedFilter) {
         this.selectedFilter = selectedFilter;
         notifyDataSetChanged();
     }
+
     @SuppressLint("InflateParams")
     private void mostrarInformacionTicket(Ticket ticket, boolean esFinalizado) {
         View dialogView;
@@ -124,48 +126,53 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
         TextView completadoPor = dialogView.findViewById(R.id.completadoPorTextViewPreview);
         TextView notasView = dialogView.findViewById(R.id.notasTextViewPreview);
 
-        tituloPreview.setText(ticket.getTitulo());
-        estadoPreview.setText(ticket.getEstado());
-        prioridadPreview.setText(ticket.getPrioridad());
-        descripcionPreview.setText(ticket.getDescripcion());
-        creadoPor.setText(ticket.getCreadoPor());
-        completadoPor.setText(ticket.getHechoPor());
 
-        String notas = ticket.getNotas();
-        if (notas != null) {
-            notasView.setText(notas);
-        }
+            tituloPreview.setText(ticket.getTitulo());
+            estadoPreview.setText(ticket.getEstado());
+            prioridadPreview.setText(ticket.getPrioridad());
+            descripcionPreview.setText(ticket.getDescripcion());
+            creadoPor.setText(ticket.getCreadoPor());
 
-        layoutVistaPreviaImagen.removeAllViews();
-
-        if (ticket.getImageUris() != null && !ticket.getImageUris().isEmpty()) {
-            for (String imageUrl : ticket.getImageUris()) {
-                ImageView imageView = new ImageView(context);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        dipToPixels(context, 350),
-                        dipToPixels(context, 500)
-                );
-                layoutParams.setMargins(10, 0, 10, 0);
-                imageView.setLayoutParams(layoutParams);
-                Glide.with(context).load(imageUrl).into(imageView);
-                layoutVistaPreviaImagen.addView(imageView);
+            String notas = ticket.getNotas();
+            if (notas != null) {
+                notasView.setText(notas);
             }
-        }
+            String completado = ticket.getCreadoPor();
+            if (completado != null){
+                completadoPor.setText(ticket.getHechoPor());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        AlertDialog dialog = builder.create();
-        Drawable background = ContextCompat.getDrawable(context, R.drawable.redondear_bordes);
-        dialog.getWindow().setBackgroundDrawable(background);
-        dialog.setView(dialogView);
-        dialog.show();
-
-        botonCerrarDialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
             }
-        });
-    }
+
+            layoutVistaPreviaImagen.removeAllViews();
+
+            if (ticket.getImageUris() != null && !ticket.getImageUris().isEmpty()) {
+                for (String imageUrl : ticket.getImageUris()) {
+                    ImageView imageView = new ImageView(context);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            dipToPixels(context, 350),
+                            dipToPixels(context, 500)
+                    );
+                    layoutParams.setMargins(10, 0, 10, 0);
+                    imageView.setLayoutParams(layoutParams);
+                    Glide.with(context).load(imageUrl).into(imageView);
+                    layoutVistaPreviaImagen.addView(imageView);
+                }
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            AlertDialog dialog = builder.create();
+            Drawable background = ContextCompat.getDrawable(context, R.drawable.redondear_bordes);
+            dialog.getWindow().setBackgroundDrawable(background);
+            dialog.setView(dialogView);
+            dialog.show();
+
+            botonCerrarDialog.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+        }
 
 
     @Override
@@ -192,4 +199,5 @@ public class ListaAdaptadorMisTickets extends RecyclerView.Adapter<ListaAdaptado
             iconoGuardado = itemView.findViewById(R.id.icono_ticket_guardar);
         }
     }
+
 }

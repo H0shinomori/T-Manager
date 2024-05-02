@@ -44,7 +44,6 @@ public class Inicio_2 extends Fragment {
     private TextView contadorTicketPendiente;
     private TextView contadorTicketFinalizado;
     private DatabaseReference ticketsReference;
-    private String userID;
     Button boton_cerrar_sesion;
     LinearLayout drawerContainer;
 

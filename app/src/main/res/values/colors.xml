@@ -31,5 +31,6 @@
     <color name="color_prioridad_media">#FF9800</color>
     <color name="color_prioridad_baja">#4CAF50</color>
     <color name="colorBarra">#2C396E</color>
+    <color name="colorfondo1">#d4d9e9</color>
 
 </resources>
